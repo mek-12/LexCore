@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "OEGidDENiFE=",
+  "success": true,
+  "projectFilePath": "/home/muhammed/Desktop/PersonalRepos/LexCore/LexHarvester/src/LexHarvester.API/LexHarvester.API.csproj",
+  "expectedPackageFiles": [
+    "/home/muhammed/.nuget/packages/microsoft.aspnetcore.openapi/9.0.4/microsoft.aspnetcore.openapi.9.0.4.nupkg.sha512",
+    "/home/muhammed/.nuget/packages/microsoft.openapi/1.6.17/microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
