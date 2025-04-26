@@ -1,0 +1,66 @@
+# Build outputs
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Dotnet environment
+*.vs/
+*.dbmdl
+
+# Docker files
+*.pid
+docker-compose.override.yml
+
+# Logs
+*.log
+
+# Entity Framework Migrations Snapshots
+Migrations/
+
+# Dependency directories
+node_modules/
+bower_components/
+
+# Test results
+TestResults/
+
+# Publish outputs
+publish/
+*.PublishProfiles/
+
+# Database files
+*.mdf
+*.ldf
+
+# Secret environment files
+.env
+.env.*
+
+# Backup files
+*.bak
+*.old
+*.tmp
+*.temp
+
+# NuGet Packages
+*.nupkg
+packages/
+
+# JetBrains IDE files
+_ReSharper*/
