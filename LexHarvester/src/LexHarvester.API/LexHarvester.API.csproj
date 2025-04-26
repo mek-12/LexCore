@@ -8,6 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.0.0" />
+    <ProjectReference Include="..\LexHarvester.Application\LexHarvester.Application.csproj" />
+    <ProjectReference Include="..\LexHarvester.Persistence\LexHarvester.Persistence.csproj" />
+
   </ItemGroup>
 
 </Project>
