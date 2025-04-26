@@ -1,5 +1,6 @@
 using LexHarvester.Persistence;
 using Microsoft.EntityFrameworkCore;
+using LexHarvester.Application.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddApplication();
 var app = builder.Build();
 
 // Configure Middleware
@@ -28,7 +29,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
 
     var context = services.GetRequiredService<ApplicationDbContext>();
-    context.Database.EnsureCreated();
+    context.Database.Migrate();
 }
 app.UseHttpsRedirection();
 

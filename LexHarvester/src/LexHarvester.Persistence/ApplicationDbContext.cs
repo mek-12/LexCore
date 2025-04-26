@@ -15,6 +15,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<MevzuatType> MevzuatTypes { get; set; }
     public DbSet<IctihatType> IctihatTypes { get; set; }
     public DbSet<RequestEndpointConfig> RequestEndpointConfigs { get; set; }
+    public DbSet<HarvestingState> HarvestingStates { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -24,5 +25,6 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<IctihatDocument>().HasIndex(x => x.DocumentId).IsUnique();
         modelBuilder.Entity<MevzuatType>().HasIndex(x => x.MevzuatTurId).IsUnique();
         modelBuilder.Entity<IctihatType>().HasIndex(x => x.Name).IsUnique();
+        modelBuilder.Entity<HarvestingState>().HasIndex(x => x.Id).IsUnique();
     }
 }
