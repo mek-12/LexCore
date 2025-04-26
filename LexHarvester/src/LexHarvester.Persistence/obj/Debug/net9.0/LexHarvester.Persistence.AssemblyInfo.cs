@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LexHarvester.Persistence")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+314f911d0e37db74ed0b59b14f8aee24d2c043ac")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4d783056498113916f434b577ebb37a0ea439d9b")]
 [assembly: System.Reflection.AssemblyProductAttribute("LexHarvester.Persistence")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LexHarvester.Persistence")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

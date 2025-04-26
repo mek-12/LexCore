@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -11,11 +9,11 @@ services:
       - "5010:1433"
     volumes:
       - mssql-data:/var/opt/mssql
-    restart: always
 
   migration:
     build:
-      context: ./src/LexHarvester.API
+      context: .
+      dockerfile: src/LexHarvester.API/Dockerfile
     depends_on:
       - sqlserver
     environment:
@@ -25,7 +23,8 @@ services:
 
   lexharvesterapi:
     build:
-      context: ./src/LexHarvester.API
+      context: .
+      dockerfile: src/LexHarvester.API/Dockerfile
     depends_on:
       - sqlserver
       - migration
@@ -34,7 +33,6 @@ services:
       ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=LexHarvesterDb;User Id=sa;Password=StrongPassword!123;TrustServerCertificate=True;"
     ports:
       - "5000:80"
-    restart: always
 
 volumes:
   mssql-data:

@@ -1,0 +1,18 @@
+# Build aşaması
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /app
+
+COPY src ./src
+COPY LexHarvester.sln ./LexHarvester.sln
+
+WORKDIR /app/src/LexHarvester.API
+
+RUN dotnet restore ../..
+RUN dotnet build ../.. -c Release --no-restore
+RUN dotnet publish ../.. -c Release -o /app/publish --no-restore
+
+# Runtime aşaması
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "LexHarvester.API.dll"]
