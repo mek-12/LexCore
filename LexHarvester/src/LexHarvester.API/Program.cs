@@ -23,6 +23,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    context.Database.EnsureCreated();
+    // DbInitializer.Initialize(context);
+}
 app.UseHttpsRedirection();
 
 // Sağlık kontrolü veya boş test için basit bir endpoint
