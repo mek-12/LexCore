@@ -10,23 +10,12 @@ services:
     volumes:
       - mssql-data:/var/opt/mssql
 
-  migration:
-    build:
-      context: .
-      dockerfile: src/LexHarvester.API/Dockerfile
-    depends_on:
-      - sqlserver
-    environment:
-      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=LexHarvesterDb;User Id=sa;Password=StrongPassword!123;TrustServerCertificate=True;"
-    entrypoint: ["dotnet", "ef", "database", "update", "--project", "src/LexHarvester.API/LexHarvester.API.csproj", "--startup-project", "src/LexHarvester.API/LexHarvester.API.csproj"]
-
   lexharvesterapi:
     build:
       context: .
       dockerfile: src/LexHarvester.API/Dockerfile
     depends_on:
       - sqlserver
-      - migration
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=LexHarvesterDb;User Id=sa;Password=StrongPassword!123;TrustServerCertificate=True;"
