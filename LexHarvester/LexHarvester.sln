@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexHarvester.Infrastructure
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexHarvester.Persistence", "src\LexHarvester.Persistence\LexHarvester.Persistence.csproj", "{9ED895B1-1448-468C-A0D3-0B19DC270292}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexHarvester.Workers", "src\LexHarvester.Workers\LexHarvester.Workers.csproj", "{A78CFB27-2921-4AED-8F2F-8E2AF03D07D6}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
