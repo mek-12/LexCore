@@ -2,7 +2,7 @@
 **/bin/
 **/obj/
 **/out/
-Database
+**/Database
 
 # User-specific files
 *.user
