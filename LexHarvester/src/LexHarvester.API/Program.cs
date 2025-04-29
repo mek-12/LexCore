@@ -12,10 +12,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Eğer ileride servisler eklersen burada builder.Services.AddScoped<>, AddSingleton<> gibi eklemeler yapılacak
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddApplication();
-builder.Services.AddControllers();
+
+builder.Services.AddInfrastructure(collection => {
+    collection.AddEndpointsApiExplorer();
+    collection.AddSwaggerGen();
+    collection.AddControllers();
+});
+
 var app = builder.Build();
 app.MapControllers();
 // Configure Middleware
