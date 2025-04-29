@@ -1,6 +1,8 @@
 using LexHarvester.Persistence;
 using Microsoft.EntityFrameworkCore;
 using LexHarvester.Application.Extensions;
+using LexHarvester.API.Extensions;
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,10 +19,12 @@ builder.Services.AddInfrastructure(collection => {
     collection.AddEndpointsApiExplorer();
     collection.AddSwaggerGen();
     collection.AddControllers();
+    collection.AddHf(builder.Configuration);
 });
 
 var app = builder.Build();
 app.MapControllers();
+app.UseHangfireDashboard("/hangfire");
 // Configure Middleware
 if (app.Environment.IsDevelopment())
 {
