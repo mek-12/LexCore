@@ -10,10 +10,10 @@ public class ApplicationDbContext : DbContext
     {
     }
 
-    public DbSet<MevzuatDocument> MevzuatDocuments { get; set; }
-    public DbSet<IctihatDocument> IctihatDocuments { get; set; }
-    public DbSet<MevzuatType> MevzuatTypes { get; set; }
-    public DbSet<IctihatType> IctihatTypes { get; set; }
+    public DbSet<LegislationDocument> LegislationDocuments { get; set; }
+    public DbSet<CaseLawDocument> CaseLawDocuments { get; set; }
+    public DbSet<LegislationType> LegislationTypes { get; set; }
+    public DbSet<CaseLawType> CaseLawTypes { get; set; }
     public DbSet<RequestEndpointConfig> RequestEndpointConfigs { get; set; }
     public DbSet<HarvestingState> HarvestingStates { get; set; }
 
@@ -21,10 +21,10 @@ public class ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<MevzuatDocument>().HasIndex(x => x.MevzuatId).IsUnique();
-        modelBuilder.Entity<IctihatDocument>().HasIndex(x => x.DocumentId).IsUnique();
-        modelBuilder.Entity<MevzuatType>().HasIndex(x => x.MevzuatTurId).IsUnique();
-        modelBuilder.Entity<IctihatType>().HasIndex(x => x.Name).IsUnique();
+        modelBuilder.Entity<LegislationDocument>().HasIndex(x => x.LegislationId).IsUnique();
+        modelBuilder.Entity<CaseLawDocument>().HasIndex(x => x.DocumentId).IsUnique();
+        modelBuilder.Entity<LegislationDocument>().HasIndex(x => x.LegislationTypeId).IsUnique();
+        modelBuilder.Entity<CaseLawType>().HasIndex(x => x.Name).IsUnique();
         modelBuilder.Entity<HarvestingState>().HasIndex(x => x.Id).IsUnique();
     }
 }
