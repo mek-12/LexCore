@@ -11,7 +11,7 @@ public static class DependencyInjection
 
             return services;
         }
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, Action<IServiceCollection> action){
+        public static IServiceCollection AddInfras(this IServiceCollection services, Action<IServiceCollection> action){
             services.AddApplication();
             action(services);
             return services;

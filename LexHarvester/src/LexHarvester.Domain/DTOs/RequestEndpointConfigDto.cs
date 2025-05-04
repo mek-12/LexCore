@@ -1,5 +1,5 @@
 namespace LexHarvester.Domain.DTOs;
-public class RequestEndpointConfigDto
+public class RequestEndpoint
 {
     public string Name { get; set; }
     public string Url { get; set; }
