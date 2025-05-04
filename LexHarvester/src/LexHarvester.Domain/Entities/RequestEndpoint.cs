@@ -13,8 +13,8 @@ public class RequestEndpointConfig
 
 
 public static class Extension {
-    public static RequestEndpointConfigDto AsDTO(this RequestEndpointConfig requestEndpointConfig) =>
-                                                 new RequestEndpointConfigDto{
+    public static RequestEndpoint AsDTO(this RequestEndpointConfig requestEndpointConfig) =>
+                                                 new RequestEndpoint{
                                                     Description = requestEndpointConfig.Description,
                                                     Method = requestEndpointConfig.Method,
                                                     Name= requestEndpointConfig.Name,
