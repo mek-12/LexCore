@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using LexHarvester.Application.Extensions;
 using LexHarvester.API.Extensions;
 using Hangfire;
+using LexHarvester.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,21 +27,19 @@ var app = builder.Build();
 app.MapControllers();
 app.UseHangfireDashboard("/hangfire");
 // Configure Middleware
-if (app.Environment.IsDevelopment())
-{
+if (app.Environment.IsDevelopment()) {
     app.UseSwagger();   
     app.UseSwaggerUI();
 }
 
-using (var scope = app.Services.CreateScope())
-{
+using (var scope = app.Services.CreateScope()) {
     var services = scope.ServiceProvider;
 
     var context = services.GetRequiredService<ApplicationDbContext>();
     context.Database.Migrate();
 }
 app.UseHttpsRedirection();
-
+app.UseMiddleware<AutoTransactionMiddleware>();
 // Sağlık kontrolü veya boş test için basit bir endpoint
 app.MapGet("/", () => "LexHarvester API is running...");
 

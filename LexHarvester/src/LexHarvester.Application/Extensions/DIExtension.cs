@@ -1,6 +1,7 @@
 using System.Reflection;
 using LexHarvester.Application.Contracts.CQRS;
 using LexHarvester.Infrastructure.Extension;
+using LexHarvester.Persistence.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LexHarvester.Application.Extensions;
@@ -13,6 +14,7 @@ public static class DependencyInjection
             return services;
         }
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, Action<IServiceCollection> action){
+            services.AddRepositories(action);
             services.AddInfrastructureServices();
             services.AddApplication();
             action(services);
