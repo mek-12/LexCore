@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\LexHarvester.Domain\LexHarvester.Domain.csproj" />
+    <ProjectReference Include="..\LexHarvester.Persistence\LexHarvester.Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>

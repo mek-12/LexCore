@@ -5,10 +5,7 @@ namespace LexHarvester.Persistence;
 
 public class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
-    {
-    }
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) {}
 
     public DbSet<LegislationDocument> LegislationDocuments { get; set; }
     public DbSet<CaseLawDocument> CaseLawDocuments { get; set; }
@@ -17,8 +14,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<RequestEndpointConfig> RequestEndpointConfigs { get; set; }
     public DbSet<HarvestingState> HarvestingStates { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
+    protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<LegislationDocument>().HasIndex(x => x.LegislationId).IsUnique();

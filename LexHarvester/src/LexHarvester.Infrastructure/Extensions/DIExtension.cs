@@ -1,12 +1,13 @@
 using LexHarvester.Infrastructure.Cache;
+using LexHarvester.Infrastructure.Services.Seeding;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
 using System.Reflection;
 
 namespace LexHarvester.Infrastructure.Extension;
 
 public static class DIExtension {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services) {
+        services.AddScoped<ITableSeeder, LegislationTypeSeeder>();
         services.AddSingleton<IRequestEndpointCache, RequestEndpointCache>();
         services.AddCacheWarmUpServices(Assembly.GetExecutingAssembly());
         return services;
