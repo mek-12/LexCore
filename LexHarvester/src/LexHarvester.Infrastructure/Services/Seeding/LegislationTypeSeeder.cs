@@ -1,20 +1,21 @@
 using LexHarvester.Domain.Entities;
-using LexHarvester.Persistence.UOW;
+using Navend.Core.Data;
+using Navend.Core.UOW;
 
 namespace LexHarvester.Infrastructure.Services.Seeding;
 public class LegislationTypeSeeder : ITableSeeder
 {
-    private readonly IUnitOfWork<LegislationType> _unitOfWork;
-
-    public LegislationTypeSeeder(IUnitOfWork<LegislationType> unitOfWork)
+    private readonly IUnitOfWork _unitOfWork;
+    private IRepository<LegislationType, int> _repository;
+    public LegislationTypeSeeder(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
+        _repository = _unitOfWork.GetRepository<LegislationType, int>();
     }
 
     public async Task SeedIfTableEmptyAsync(CancellationToken cancellationToken = default)
     {
-
-        bool isEmpty = !(await _unitOfWork.GetAllAsync()).Any();
+        bool isEmpty = await _repository.GetCountAsync(r => r.Id == r.Id) != 0; // koşul doğru olmadı. Sonra yine bakalım
         if (!isEmpty)
             return;
 
@@ -25,6 +26,6 @@ public class LegislationTypeSeeder : ITableSeeder
             // Diğer türler eklenebilir
         };
 
-        await _unitOfWork.AddRangeAsync(types);
+        await _repository.AddRangeAsync(types);
     }
 }

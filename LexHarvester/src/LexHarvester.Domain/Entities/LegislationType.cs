@@ -1,8 +1,9 @@
 using System;
+using Navend.Core.Data;
 
 namespace LexHarvester.Domain.Entities;
 
-public class LegislationType
+public class LegislationType : IEntity<int>
 {
     public int Id { get; set; } // Primary key
     public int LegislationTypeId { get; set; } // MevzuatTurId

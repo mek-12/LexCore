@@ -4,6 +4,7 @@ using LexHarvester.Application.Extensions;
 using LexHarvester.API.Extensions;
 using Hangfire;
 using LexHarvester.API.Middleware;
+using Navend.Core.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 // Eğer ileride servisler eklersen burada builder.Services.AddScoped<>, AddSingleton<> gibi eklemeler yapılacak
-
 
 builder.Services.AddInfrastructure(collection => {
     collection.AddEndpointsApiExplorer();

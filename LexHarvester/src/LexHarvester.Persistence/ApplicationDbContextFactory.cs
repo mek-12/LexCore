@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace LexHarvester.Persistence
 {
@@ -7,8 +9,18 @@ namespace LexHarvester.Persistence
     {
         public ApplicationDbContext CreateDbContext(string[] args)
         {
+            // API katmanındaki appsettings.Development.json dosyasını hedefle
+            var basePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "LexHarvester.API");
+
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(basePath)
+                .AddJsonFile("appsettings.Development.json")
+                .Build();
+
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            optionsBuilder.UseSqlServer("Server=localhost,5010;Database=LexHarvesterDb;User=sa;Password=StrongPassword!123;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer(connectionString);
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }
