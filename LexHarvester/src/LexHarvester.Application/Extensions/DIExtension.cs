@@ -1,6 +1,7 @@
 using System.Reflection;
 using LexHarvester.Application.Contracts.CQRS;
 using LexHarvester.Application.Jobs;
+using LexHarvester.Application.Services.Seeding;
 using LexHarvester.Infrastructure.Extension;
 using LexHarvester.Persistence.Extensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +23,7 @@ public static class DependencyInjection
         services.AddHfJobs();
         services.AddInfrastructureServices();
         services.AddApplication();
+        services.AddSeeders();
         action(services);
         return services;
     }
@@ -91,5 +93,18 @@ public static class DependencyInjection
         jobTypes.AddRange(assembly.GetTypes()
                                    .Where(t => typeof(IJob).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract));
         return jobTypes;
+    }
+
+    private static IServiceCollection AddSeeders(this IServiceCollection services)
+    {
+        var seederTypes = Assembly.GetExecutingAssembly().GetTypes()
+            .Where(t => typeof(ITableSync).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+
+        foreach (var seederType in seederTypes)
+        {
+            services.AddTransient(typeof(ITableSync), seederType);
+        }
+        services.AddTransient<ITableSyncOrchestrator, TableSyncOrchestrator>();
+        return services;
     }
 }

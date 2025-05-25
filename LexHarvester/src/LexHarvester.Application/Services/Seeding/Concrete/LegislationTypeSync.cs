@@ -10,8 +10,8 @@ public class LegislationTypeSync : ITableSync
 {
     private readonly IUnitOfWork _unitOfWork;
     private IRepository<LegislationType, int> _repository;
-    private Lazy<ILegislationTypeProvider> _legislationTypeProvider;
-    public LegislationTypeSync(IUnitOfWork unitOfWork, Lazy<ILegislationTypeProvider> legislationTypeProvider)
+    private ILegislationTypeProvider _legislationTypeProvider;
+    public LegislationTypeSync(IUnitOfWork unitOfWork, ILegislationTypeProvider legislationTypeProvider)
     {
         _unitOfWork = unitOfWork;
         _repository = _unitOfWork.GetRepository<LegislationType, int>();
@@ -20,10 +20,10 @@ public class LegislationTypeSync : ITableSync
     
     public async Task SyncAsync(CancellationToken cancellationToken = default)
     {
-        bool isEmpty = await _repository.GetCountAsync(r => r.Id == r.Id) != 0; // koşul doğru olmadı. Sonra yine bakalım
+        bool isEmpty = await _repository.GetCountAsync(r => r.Id == r.Id) == 0; // koşul doğru olmadı. Sonra yine bakalım
         if (!isEmpty)
             return;
-        LegislationTypeResponse legislationTypeResponse =  await _legislationTypeProvider.Value.GetAsync(new LegislationTypeRequest());
+        LegislationTypeResponse legislationTypeResponse =  await _legislationTypeProvider.GetAsync(new LegislationTypeRequest());
         if (legislationTypeResponse == null)
             return;
         var types = new List<LegislationType>();
