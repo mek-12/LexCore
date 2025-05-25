@@ -6,7 +6,6 @@ WORKDIR /app
 RUN dotnet tool install --global dotnet-ef
 
 ENV PATH="${PATH}:/root/.dotnet/tools"
-
 COPY src ./src
 COPY LexHarvester.sln ./LexHarvester.sln
 

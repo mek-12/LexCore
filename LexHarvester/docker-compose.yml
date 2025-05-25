@@ -20,7 +20,7 @@ services:
       ASPNETCORE_ENVIRONMENT: "Production"
       # ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=LexHarvesterDb;User Id=sa;Password=StrongPassword!123;TrustServerCertificate=True;"
     ports:
-      - "5000:80"
+      - "3210:8080" # Host:Container
 
 volumes:
   mssql-data:
