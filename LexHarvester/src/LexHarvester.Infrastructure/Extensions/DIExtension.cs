@@ -1,13 +1,19 @@
 using LexHarvester.Infrastructure.Cache;
+using LexHarvester.Infrastructure.Providers;
+using LexHarvester.Infrastructure.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace LexHarvester.Infrastructure.Extension;
 
-public static class DIExtension {
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services) {
+public static class DIExtension
+{
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+    {
         services.AddSingleton<IRequestEndpointCache, RequestEndpointCache>();
         services.AddCacheWarmUpServices(Assembly.GetExecutingAssembly());
+        services.AddHttpClientServices();
+        services.AddAutoMapper(typeof(MapperProfile));
         return services;
     }
 
@@ -24,6 +30,15 @@ public static class DIExtension {
             services.AddSingleton(interfaceType, type);
         }
 
+        return services;
+    }
+    private static IServiceCollection AddHttpClientServices(this IServiceCollection services)
+    {
+        services.AddHttpClient<ILegislationTypeProvider,LegislationTypeProvider>(client =>
+        {
+            client.BaseAddress = new Uri("https://bedesten.adalet.gov.tr/");
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+        });
         return services;
     }
 }
