@@ -6,26 +6,29 @@ using Hangfire;
 using LexHarvester.API.Middleware;
 using Navend.Core.Extensions;
 
+Console.WriteLine("Starting LexHarvester API...");
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure Services
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
-
 // Eğer ileride servisler eklersen burada builder.Services.AddScoped<>, AddSingleton<> gibi eklemeler yapılacak
 
 builder.Services.AddInfrastructure(collection => {
+    collection.AddEfCoreUnitOfWork<ApplicationDbContext>(builder.Configuration);
     collection.AddEndpointsApiExplorer();
     collection.AddSwaggerGen();
     collection.AddControllers();
-    collection.AddHf(builder.Configuration);
+    collection.AddHf(connectionString);
 });
 
 var app = builder.Build();
 app.MapControllers();
-app.UseHangfireDashboard("/hangfire");
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = new[] { new AllowAllDashboardAuthorizationFilter() },
+    IgnoreAntiforgeryToken = true
+});
 // Configure Middleware
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();   

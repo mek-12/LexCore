@@ -2,8 +2,8 @@ using LexHarvester.Domain.Entities;
 using Navend.Core.Data;
 using Navend.Core.UOW;
 
-namespace LexHarvester.Infrastructure.Services.Seeding;
-public class LegislationTypeSeeder : ITableSeeder
+namespace LexHarvester.Application.Services.Seeding;
+public class LegislationTypeSeeder : ITableSync
 {
     private readonly IUnitOfWork _unitOfWork;
     private IRepository<LegislationType, int> _repository;
@@ -13,7 +13,7 @@ public class LegislationTypeSeeder : ITableSeeder
         _repository = _unitOfWork.GetRepository<LegislationType, int>();
     }
 
-    public async Task SeedIfTableEmptyAsync(CancellationToken cancellationToken = default)
+    public async Task SyncAsync(CancellationToken cancellationToken = default)
     {
         bool isEmpty = await _repository.GetCountAsync(r => r.Id == r.Id) != 0; // koşul doğru olmadı. Sonra yine bakalım
         if (!isEmpty)
