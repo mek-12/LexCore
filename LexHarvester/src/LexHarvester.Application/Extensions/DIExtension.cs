@@ -3,7 +3,6 @@ using LexHarvester.Application.Contracts.CQRS;
 using LexHarvester.Application.Jobs;
 using LexHarvester.Application.Services.Seeding;
 using LexHarvester.Infrastructure.Extension;
-using LexHarvester.Persistence.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LexHarvester.Application.Extensions;
@@ -17,9 +16,8 @@ public static class DependencyInjection
 
         return services;
     }
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, Action<IServiceCollection> action)
+    public static IServiceCollection RegisterServices(this IServiceCollection services, Action<IServiceCollection> action)
     {
-        services.AddRepositories(action);
         services.AddHfJobs();
         services.AddInfrastructureServices();
         services.AddApplication();

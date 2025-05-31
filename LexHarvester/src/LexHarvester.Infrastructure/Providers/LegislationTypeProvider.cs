@@ -16,8 +16,9 @@ public class LegislationTypeProvider : ILegislationTypeProvider
     {
         try
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "mevzuat/mevzuatTypes")
+            var request = new HttpRequestMessage()
             {
+                Method = HttpMethod.Post,
                 Content = new StringContent(JsonConvert.SerializeObject(legislationTypeRequest), System.Text.Encoding.UTF8, "application/json")
             };
             var response = await _httpClient.SendAsync(request, CancellationToken.None);

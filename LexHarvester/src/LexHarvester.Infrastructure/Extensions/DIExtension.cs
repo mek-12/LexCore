@@ -11,38 +11,63 @@ public static class DIExtension
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
         services.AddSingleton<IRequestEndpointCache, RequestEndpointCache>();
-        services.AddCacheWarmUpServices(new[] { typeof(RequestEndpointCache).Assembly });
+        services.AddCaches(new[] { typeof(RequestEndpointCache).Assembly });
+        services.AddHostedService<CacheWarmUpHostedService>();
         services.AddHttpClientServices();
         services.AddAutoMapper(typeof(MapperProfile));
         return services;
     }
 
-    private static IServiceCollection AddCacheWarmUpServices(this IServiceCollection services, params Assembly[] assemblies)
+    private static IServiceCollection AddCaches(this IServiceCollection services, params Assembly[] assemblies)
     {
-        var cacheTypes = assemblies
-            .SelectMany(a => a.GetTypes())
-            .Where(t => !t.IsAbstract && typeof(ICacheWarmUpService).IsAssignableFrom(t));
+        // Mevcut assembly'deki tüm sınıfları al
+        var cacheServices = Assembly.GetExecutingAssembly().GetTypes()
+            // `IBaseCacheService<>` ve `ICacheWarmUpService`'i implement eden sınıfları bul
+            .Where(t => t.IsClass && !t.IsAbstract &&
+                        t.GetInterfaces().Any(i =>
+                            i.IsGenericType &&
+                            i.GetGenericTypeDefinition() == typeof(IBaseCacheService<>)) &&
+                        typeof(ICacheWarmUpService).IsAssignableFrom(t))
+            .ToList();
 
-        foreach (var type in cacheTypes)
+        foreach (var service in cacheServices)
         {
-            var iface = type.GetInterfaces().FirstOrDefault(i => i != typeof(ICacheWarmUpService) && typeof(ICacheWarmUpService).IsAssignableFrom(i));
-            if (iface != null)
-                services.AddSingleton(iface, type);
+            // Sınıfın implement ettiği tüm interface'leri al
+            var interfaces = service.GetInterfaces();
 
-            services.AddSingleton(typeof(ICacheWarmUpService), type);
+            // Bu sınıfı, her interface ile register et (IBaseCacheService<T> ve ICacheWarmUpService)
+            foreach (var interfaceType in interfaces)
+            {
+                if (interfaceType != typeof(ICacheWarmUpService) &&
+                   (!interfaceType.IsGenericType ||
+                     interfaceType.GetGenericTypeDefinition() != typeof(IBaseCacheService<>)))
+                {
+                    services.AddSingleton(interfaceType, service);
+                    services.AddSingleton<ICacheWarmUpService>(provider =>
+                        (ICacheWarmUpService)provider.GetRequiredService(interfaceType));
+
+                }
+            }
         }
-
-        services.AddHostedService<CacheWarmUpHostedService>();
-
         return services;
     }
     private static IServiceCollection AddHttpClientServices(this IServiceCollection services)
     {
-        services.AddHttpClient<ILegislationTypeProvider,LegislationTypeProvider>(client =>
-        {
-            client.BaseAddress = new Uri("https://bedesten.adalet.gov.tr/");
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-        });
+        services.AddHttpClient<ILegislationTypeProvider, LegislationTypeProvider>()
+                .ConfigureHttpClient((serviceProvider, client) =>
+                {
+                    var cache = serviceProvider.GetRequiredService<IRequestEndpointCache>();
+                    var endpointConfig = cache.Get("GetMevzuatTypes");
+                    if (endpointConfig != null)
+                    {
+                        client.BaseAddress = new Uri($"{endpointConfig.Url}{endpointConfig.Method}");
+                        client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("LegislationTypeEndpoint configuration not found in cache.");
+                    }
+                });
         return services;
     }
 }

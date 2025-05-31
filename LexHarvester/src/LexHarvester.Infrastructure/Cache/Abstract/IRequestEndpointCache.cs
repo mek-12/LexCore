@@ -2,7 +2,7 @@ using LexHarvester.Domain.DTOs;
 
 namespace LexHarvester.Infrastructure.Cache;
 
-public interface IRequestEndpointCache : IBaseCacheService<RequestEndpointConfigDto>
+public interface IRequestEndpointCache : IBaseCacheService<RequestEndpointConfigDto>, ICacheWarmUpService
 {
 
 }

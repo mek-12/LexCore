@@ -14,15 +14,24 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 // Eğer ileride servisler eklersen burada builder.Services.AddScoped<>, AddSingleton<> gibi eklemeler yapılacak
 
-builder.Services.AddInfrastructure(collection => {
+builder.Services.RegisterServices(collection => {
     collection.AddEfCoreUnitOfWork<ApplicationDbContext>(builder.Configuration);
     collection.AddEndpointsApiExplorer();
     collection.AddSwaggerGen();
     collection.AddControllers();
     collection.AddHf(connectionString);
 });
+WebApplication app;
+try
+{
+    app = builder.Build();
+}
+catch (System.AggregateException ex)
+{
+    
+    throw ex;
+}
 
-var app = builder.Build();
 app.MapControllers();
 app.UseHangfireDashboard("/hangfire", new DashboardOptions
 {

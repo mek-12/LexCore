@@ -32,12 +32,11 @@ public abstract class BaseCacheService<T> : IBaseCacheService<T>
         LoadData(); // Bu doğru mu?
     }
 
-    protected abstract ConcurrentDictionary<string, T> LoadFromSource();
+    protected abstract void LoadFromSource();
 
     protected virtual void LoadData()
     {
-        var data = LoadFromSource();
-        _cache = new ConcurrentDictionary<string, T>(data);
+        LoadFromSource();
     }
 
     public bool TryGet(string key, out T? value)

@@ -1,3 +1,6 @@
+Rebuild Command:
+
+
 EF Core Code First Migration:
 
 Yeni bir ef core model eklediğimizde veya modifiye ettiğimizde:
