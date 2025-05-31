@@ -11,24 +11,28 @@ public static class DIExtension
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
         services.AddSingleton<IRequestEndpointCache, RequestEndpointCache>();
-        services.AddCacheWarmUpServices(Assembly.GetExecutingAssembly());
+        services.AddCacheWarmUpServices(new[] { typeof(RequestEndpointCache).Assembly });
         services.AddHttpClientServices();
         services.AddAutoMapper(typeof(MapperProfile));
         return services;
     }
 
-    private static IServiceCollection AddCacheWarmUpServices(this IServiceCollection services, params Assembly[] assembliesToScan)
+    private static IServiceCollection AddCacheWarmUpServices(this IServiceCollection services, params Assembly[] assemblies)
     {
-        var interfaceType = typeof(ICacheWarmUpService);
-
-        var typesToRegister = assembliesToScan
+        var cacheTypes = assemblies
             .SelectMany(a => a.GetTypes())
-            .Where(t => !t.IsAbstract && !t.IsInterface && interfaceType.IsAssignableFrom(t));
+            .Where(t => !t.IsAbstract && typeof(ICacheWarmUpService).IsAssignableFrom(t));
 
-        foreach (var type in typesToRegister)
+        foreach (var type in cacheTypes)
         {
-            services.AddSingleton(interfaceType, type);
+            var iface = type.GetInterfaces().FirstOrDefault(i => i != typeof(ICacheWarmUpService) && typeof(ICacheWarmUpService).IsAssignableFrom(i));
+            if (iface != null)
+                services.AddSingleton(iface, type);
+
+            services.AddSingleton(typeof(ICacheWarmUpService), type);
         }
+
+        services.AddHostedService<CacheWarmUpHostedService>();
 
         return services;
     }

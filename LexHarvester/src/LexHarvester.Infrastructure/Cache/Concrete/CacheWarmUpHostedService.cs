@@ -1,19 +1,32 @@
 namespace LexHarvester.Infrastructure.Cache;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+
 public class CacheWarmUpHostedService : IHostedService
 {
-    private readonly IEnumerable<ICacheWarmUpService> _cacheServices;
+    private readonly IEnumerable<ICacheWarmUpService> _cacheWarmers;
+    private readonly ILogger<CacheWarmUpHostedService> _logger;
 
-    public CacheWarmUpHostedService(IEnumerable<ICacheWarmUpService> cacheServices)
+    public CacheWarmUpHostedService(IEnumerable<ICacheWarmUpService> cacheWarmers, ILogger<CacheWarmUpHostedService> logger)
     {
-        _cacheServices = cacheServices;
+        _cacheWarmers = cacheWarmers;
+        _logger = logger;
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        foreach (var cache in _cacheServices)
+        foreach (var cache in _cacheWarmers)
         {
-            await cache.LoadAsync(); // her cache tek tek load edilir
+            try
+            {
+                _logger.LogInformation("Warming up cache: {CacheName}", cache.CacheName);
+                await cache.LoadAsync();
+                _logger.LogInformation("Cache {CacheName} warmed up successfully.", cache.CacheName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error warming up cache: {CacheName}", cache.CacheName);
+            }
         }
     }
 
