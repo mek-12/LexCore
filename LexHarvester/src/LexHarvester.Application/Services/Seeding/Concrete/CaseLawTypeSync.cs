@@ -10,12 +10,12 @@ public class CaseLawTypeSync : ITableSync
 {
     private readonly IUnitOfWork _unitOfWork;
     private IRepository<CaseLawType, int> _repository;
-    private ICaseLawTypeProvider _CaseLawTypeProvider;
-    public CaseLawTypeSync(IUnitOfWork unitOfWork, ICaseLawTypeProvider CaseLawTypeProvider)
+    private ICaseLawTypeProvider _caseLawTypeProvider;
+    public CaseLawTypeSync(IUnitOfWork unitOfWork, ICaseLawTypeProvider caseLawTypeProvider)
     {
         _unitOfWork = unitOfWork;
         _repository = _unitOfWork.GetRepository<CaseLawType, int>();
-        _CaseLawTypeProvider = CaseLawTypeProvider;
+        _caseLawTypeProvider = caseLawTypeProvider;
     }
     
     public async Task SyncAsync(CancellationToken cancellationToken = default)
@@ -23,7 +23,7 @@ public class CaseLawTypeSync : ITableSync
         bool isEmpty = await _repository.GetCountAsync(r => r.Id == r.Id) == 0; // koşul doğru olmadı. Sonra yine bakalım
         if (!isEmpty)
             return;
-        var caseLawTypeResponse =  await _CaseLawTypeProvider.SendAsync(new CaseLawTypeRequest());
+        var caseLawTypeResponse =  await _caseLawTypeProvider.SendAsync(new CaseLawTypeRequest());
         if (caseLawTypeResponse == null)
             return;
         var types = new List<CaseLawType>();
