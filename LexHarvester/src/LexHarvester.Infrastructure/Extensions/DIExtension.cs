@@ -1,5 +1,7 @@
 using LexHarvester.Infrastructure.Cache;
 using LexHarvester.Infrastructure.Providers;
+using LexHarvester.Infrastructure.Providers.Abstract;
+using LexHarvester.Infrastructure.Providers.Concrete;
 using LexHarvester.Infrastructure.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -53,36 +55,31 @@ public static class DIExtension
     }
     private static IServiceCollection AddHttpClientServices(this IServiceCollection services)
     {
-        services.AddHttpClient<ILegislationTypeProvider, LegislationTypeProvider>()
-                .ConfigureHttpClient((serviceProvider, client) =>
-                {
-                    var cache = serviceProvider.GetRequiredService<IRequestEndpointCache>();
-                    var endpointConfig = cache.Get("GetMevzuatTypes");
-                    if (endpointConfig != null)
-                    {
-                        client.BaseAddress = new Uri($"{endpointConfig.Url}{endpointConfig.Method}");
-                        client.DefaultRequestHeaders.Add("Accept", "application/json");
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("LegislationTypeEndpoint configuration not found in cache.");
-                    }
-                });
-        services.AddHttpClient<ICaseLawTypeProvider, CaseLawTypeProvider>()
-                .ConfigureHttpClient((serviceProvider, client) =>
-                {
-                    var cache = serviceProvider.GetRequiredService<IRequestEndpointCache>();
-                    var endpointConfig = cache.Get("GetIctihatTypes");
-                    if (endpointConfig != null)
-                    {
-                        client.BaseAddress = new Uri($"{endpointConfig.Url}{endpointConfig.Method}");
-                        client.DefaultRequestHeaders.Add("Accept", "application/json");
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("CaseLawTypeEndpoint configuration not found in cache.");
-                    }
-                });
+        services.AddConfiguredHttpClient<ILegislationTypeProvider, LegislationTypeProvider>("GetMevzuatTypes");
+        services.AddConfiguredHttpClient<ICaseLawTypeProvider, CaseLawTypeProvider>("GetIctihatTypes");
+        services.AddConfiguredHttpClient<ICaseLawDocumentReferenceProvider, CaseLawDocumentReferenceProvider>("GetIctihatDocumentReferences");
+        
         return services;
+    }
+    private static IHttpClientBuilder AddConfiguredHttpClient<TInterface, TImplementation>(
+        this IServiceCollection services,
+        string endpointKey)
+        where TImplementation : class, TInterface
+        where TInterface : class
+    {
+        return services.AddHttpClient<TInterface, TImplementation>()
+            .ConfigureHttpClient((serviceProvider, client) =>
+            {
+                var cache = serviceProvider.GetRequiredService<IRequestEndpointCache>();
+                var endpointConfig = cache.Get(endpointKey);
+
+                if (endpointConfig == null)
+                {
+                    throw new InvalidOperationException($"{typeof(TInterface).Name} endpoint configuration '{endpointKey}' not found in cache.");
+                }
+
+                client.BaseAddress = new Uri($"{endpointConfig.Url}{endpointConfig.Method}");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+            });
     }
 }
