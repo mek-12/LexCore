@@ -3,7 +3,7 @@ using System;
 namespace LexHarvester.Domain.Entities;
 
 // Formerly: MevzuatDocument
-public class LegislationDocument
+public class LegislationDocumentReference
 {
     public int Id { get; set; }
     public string LegislationId { get; set; } // MevzuatId

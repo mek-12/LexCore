@@ -1,16 +1,22 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace LexHarvester.Domain.Entities;
 
 // Formerly: IctihatDocument
-public class CaseLawDocument
+public class CaseLawDocumentReference
 {
     public int Id { get; set; }
     public string DocumentId { get; set; }
-    public string ItemType { get; set; }
+    public string ItemTypeName { get; set; }
+    public string ItemTypeDescription { get; set; }
     public string UnitName { get; set; } // BirimAdi
     public string DecisionNumber { get; set; } // KararNo
+    public int DecisionNumberSequence { get; set; } // KararNoSira
+    public string DecisionNumberYear { get; set; } // KararNoYil
     public string CaseNumber { get; set; } // EsasNo
+    public string CaseNumberYear { get; set; } // EsasNoYil
+    public string CaseNumberSequence { get; set; } // EsasNoSira
     public DateTime? DecisionDate { get; set; } // KararTarihi
     public string DecisionDateStr { get; set; } // KararTarihiStr
     public string FinalizationStatus { get; set; } // KesinlesmeDurumu

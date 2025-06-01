@@ -68,6 +68,21 @@ public static class DIExtension
                         throw new InvalidOperationException("LegislationTypeEndpoint configuration not found in cache.");
                     }
                 });
+        services.AddHttpClient<ICaseLawTypeProvider, CaseLawTypeProvider>()
+                .ConfigureHttpClient((serviceProvider, client) =>
+                {
+                    var cache = serviceProvider.GetRequiredService<IRequestEndpointCache>();
+                    var endpointConfig = cache.Get("GetIctihatTypes");
+                    if (endpointConfig != null)
+                    {
+                        client.BaseAddress = new Uri($"{endpointConfig.Url}{endpointConfig.Method}");
+                        client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("CaseLawTypeEndpoint configuration not found in cache.");
+                    }
+                });
         return services;
     }
 }

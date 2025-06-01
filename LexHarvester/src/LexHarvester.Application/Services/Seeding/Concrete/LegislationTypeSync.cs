@@ -23,7 +23,7 @@ public class LegislationTypeSync : ITableSync
         bool isEmpty = await _repository.GetCountAsync(r => r.Id == r.Id) == 0; // koşul doğru olmadı. Sonra yine bakalım
         if (!isEmpty)
             return;
-        LegislationTypeResponse legislationTypeResponse =  await _legislationTypeProvider.GetAsync(new LegislationTypeRequest());
+        LegislationTypeResponse legislationTypeResponse =  await _legislationTypeProvider.SendAsync(new LegislationTypeRequest());
         if (legislationTypeResponse == null)
             return;
         var types = new List<LegislationType>();
