@@ -4,10 +4,11 @@ using LexHarvester.Infrastructure.Providers.Request;
 using Navend.Core.Data;
 using Navend.Core.UOW;
 
-namespace LexHarvester.Application.Services.Seeding.Concrete;
+namespace LexHarvester.Application.Seeding.Concrete;
 
 public class CaseLawTypeSync : ITableSync
 {
+    public int Order => 1;
     private readonly IUnitOfWork _unitOfWork;
     private IRepository<CaseLawType, int> _repository;
     private ICaseLawTypeProvider _caseLawTypeProvider;

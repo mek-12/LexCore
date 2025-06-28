@@ -5,9 +5,10 @@ using LexHarvester.Infrastructure.Providers.Respose;
 using Navend.Core.Data;
 using Navend.Core.UOW;
 
-namespace LexHarvester.Application.Services.Seeding;
+namespace LexHarvester.Application.Seeding;
 public class LegislationTypeSync : ITableSync
 {
+    public int Order => 1;
     private readonly IUnitOfWork _unitOfWork;
     private IRepository<LegislationType, int> _repository;
     private ILegislationTypeProvider _legislationTypeProvider;

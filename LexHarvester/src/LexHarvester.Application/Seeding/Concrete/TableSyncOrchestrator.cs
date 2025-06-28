@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace LexHarvester.Application.Services.Seeding;
+namespace LexHarvester.Application.Seeding;
 
 public class TableSyncOrchestrator : ITableSyncOrchestrator
 {

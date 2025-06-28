@@ -1,7 +1,7 @@
 using System.Reflection;
 using LexHarvester.Application.Contracts.CQRS;
 using LexHarvester.Application.Jobs;
-using LexHarvester.Application.Services.Seeding;
+using LexHarvester.Application.Seeding;
 using LexHarvester.Infrastructure.Extension;
 using Microsoft.Extensions.DependencyInjection;
 

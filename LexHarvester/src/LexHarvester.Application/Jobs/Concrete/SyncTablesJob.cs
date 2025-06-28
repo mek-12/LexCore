@@ -1,4 +1,4 @@
-using LexHarvester.Application.Services.Seeding;
+using LexHarvester.Application.Seeding;
 using Microsoft.Extensions.Logging;
 namespace LexHarvester.Application.Jobs.Concrete
 {

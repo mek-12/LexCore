@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using LexHarvester.Domain.Enums;
+using Navend.Core.Data;
 
 namespace LexHarvester.Domain.Entities
 {
-    public class HarvestingState
+    public class HarvestingState : IEntity<int>
     {
         [Key]
         public int Id { get; set; }
@@ -14,7 +15,7 @@ namespace LexHarvester.Domain.Entities
 
         public int CurrentPage { get; set; }
 
-        public int TotalPage { get; set; }
+        public int Count { get; set; }
 
         public bool IsCompleted { get; set; }
 

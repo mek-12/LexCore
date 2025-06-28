@@ -2,7 +2,7 @@ namespace LexHarvester.Domain.Enums
 {
     public enum DocumentType
     {
-        Mevzuat = 1,
-        Ictihat = 2
+        Legislation = 1, // Mevzuat
+        CaseLaw = 2 // İçtihat
     }
 }

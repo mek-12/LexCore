@@ -1,5 +1,5 @@
 
-namespace LexHarvester.Application.Services.Seeding;
+namespace LexHarvester.Application.Seeding;
 
 public interface ITableSyncOrchestrator
 {
