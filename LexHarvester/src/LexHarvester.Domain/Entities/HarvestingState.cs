@@ -16,6 +16,7 @@ namespace LexHarvester.Domain.Entities
         public int CurrentPage { get; set; }
 
         public int Count { get; set; }
+        public bool Synchronized { get; set; } = false; // Count must be equal LegislationType.Count
 
         public bool IsCompleted { get; set; }
 

@@ -1,47 +1,21 @@
-using LexHarvester.Domain.Entities;
-using LexHarvester.Infrastructure.Providers;
-using LexHarvester.Infrastructure.Providers.Request;
-using LexHarvester.Infrastructure.Providers.Respose;
-using Navend.Core.Data;
-using Navend.Core.UOW;
+using LexHarvester.Application.Steps.LegislationTypeSync;
+using Navend.Core.Step.Abstract;
 
 namespace LexHarvester.Application.Seeding;
+
 public class LegislationTypeSync : ITableSync
 {
     public int Order => 1;
-    private readonly IUnitOfWork _unitOfWork;
-    private IRepository<LegislationType, int> _repository;
-    private ILegislationTypeProvider _legislationTypeProvider;
-    public LegislationTypeSync(IUnitOfWork unitOfWork, ILegislationTypeProvider legislationTypeProvider)
+    private readonly List<IStep<LegislationTypeStepContext>> _steps;
+    public LegislationTypeSync(IEnumerable<IStep<LegislationTypeStepContext>> steps)
     {
-        _unitOfWork = unitOfWork;
-        _repository = _unitOfWork.GetRepository<LegislationType, int>();
-        _legislationTypeProvider = legislationTypeProvider;
+        _steps = steps.OrderBy(s=>s.Order).ToList();
     }
-    
+
     public async Task SyncAsync(CancellationToken cancellationToken = default)
     {
-        bool isEmpty = await _repository.GetCountAsync(r => r.Id == r.Id) == 0; // koşul doğru olmadı. Sonra yine bakalım
-        if (!isEmpty)
-            return;
-        LegislationTypeResponse legislationTypeResponse =  await _legislationTypeProvider.SendAsync(new LegislationTypeRequest());
-        if (legislationTypeResponse == null)
-            return;
-        var types = new List<LegislationType>();
-        foreach (var type in legislationTypeResponse.Data)
-        {
-            types.Add(new LegislationType
-            {
-                LegislationTypeId = type.LegislationTypeId,
-                LegislationTypeCode = type.LegislationTypeCode,
-                LegislationTypeTitle = type.LegislationTypeTitle,
-                OrderNumber = type.OrderNumber,
-                LastOperationDate = type.LastOperationDate,
-                Count = type.Count
-            });
-        }
-        if (types.Count == 0)
-            throw new InvalidOperationException("No Legislation Types found in the response.");
-        await _repository.AddRangeAsync(types);
+        LegislationTypeStepContext context = new();
+        foreach (var step in _steps)
+            await step.ExecuteAsync();
     }
 }
