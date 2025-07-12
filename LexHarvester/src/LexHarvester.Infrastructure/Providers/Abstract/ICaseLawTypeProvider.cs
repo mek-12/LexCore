@@ -3,6 +3,6 @@ using LexHarvester.Infrastructure.Providers.Respose;
 
 namespace LexHarvester.Infrastructure.Providers;
 
-public interface ICaseLawTypeProvider : IBaseCilent<CaseLawTypeResponse, CaseLawTypeRequest>
+public interface ICaseLawTypeProvider : IBaseCilent<CaseLawTypeRequest, CaseLawTypeResponse>
 {
 }
