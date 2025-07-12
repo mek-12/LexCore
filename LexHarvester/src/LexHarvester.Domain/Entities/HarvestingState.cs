@@ -13,12 +13,12 @@ namespace LexHarvester.Domain.Entities
 
         public string? SubType { get; set; } // Kanun, Yonetmelik gibi. Tablo'dan okunacak.
 
-        public int CurrentPage { get; set; }
+        public int CurrentPage { get; set; } = 0;
 
-        public int Count { get; set; }
+        public int Count { get; set; } = 1;
         public bool Synchronized { get; set; } = false; // Count must be equal LegislationType.Count
 
-        public bool IsCompleted { get; set; }
+        public bool IsCompleted { get; set; } = false;
 
         public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
 

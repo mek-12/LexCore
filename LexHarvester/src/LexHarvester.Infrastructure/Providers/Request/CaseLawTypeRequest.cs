@@ -1,6 +1,3 @@
 namespace LexHarvester.Infrastructure.Providers.Request;
 
-public class CaseLawTypeRequest : BaseRequest
-{
-
-}
+public class CaseLawTypeRequest : LexBaseRequest { }

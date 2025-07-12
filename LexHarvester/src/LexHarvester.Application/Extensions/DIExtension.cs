@@ -1,6 +1,7 @@
 using System.Reflection;
 using LexHarvester.Application.Contracts.CQRS;
 using LexHarvester.Application.Jobs;
+using LexHarvester.Application.Mapper;
 using LexHarvester.Application.Seeding;
 using LexHarvester.Infrastructure.Extension;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,6 +47,7 @@ public static class DependencyInjection
 
         services.AddScoped<ICommandSender, CommandSender>();
         services.AddScoped<IQuerySender, QuerySender>();
+        services.AddAutoMapper(typeof(LegislationMappingProfile).Assembly); // TO DO: NavendCore a al sonr. Profile dan türeyen tüm assemblyler i tara ve ekle.
         return services;
     }
 

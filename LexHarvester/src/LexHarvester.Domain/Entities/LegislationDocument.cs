@@ -1,11 +1,11 @@
-using System;
+using Navend.Core.Data;
 
 namespace LexHarvester.Domain.Entities;
 
 // Formerly: MevzuatDocument
-public class LegislationDocumentReference
+public class LegislationDocumentReference: IEntity<long>
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
     public string LegislationId { get; set; } // MevzuatId
     public string LegislationNumber { get; set; } // MevzuatNo
     public string LegislationTitle { get; set; } // MevzuatAdi

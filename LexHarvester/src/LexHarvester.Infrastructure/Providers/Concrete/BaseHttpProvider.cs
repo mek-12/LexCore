@@ -1,10 +1,11 @@
 using System.Text;
+using LexHarvester.Infrastructure.Providers.Request;
 using Newtonsoft.Json;
 
 namespace LexHarvester.Infrastructure.Providers.Concrete;
 
-public abstract class BaseHttpProvider<TRequest, TResponse> : IBaseCilent<TResponse, TRequest>
-    where TRequest : class
+public abstract class BaseHttpProvider<TRequest, TResponse> : IBaseCilent<TRequest, TResponse>
+    where TRequest : LexBaseRequest
     where TResponse : class
 {
     private readonly HttpClient _httpClient;
