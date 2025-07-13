@@ -2,7 +2,6 @@ using LexHarvester.Infrastructure.Cache;
 using LexHarvester.Infrastructure.Providers;
 using LexHarvester.Infrastructure.Providers.Abstract;
 using LexHarvester.Infrastructure.Providers.Concrete;
-using LexHarvester.Infrastructure.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -16,7 +15,6 @@ public static class DIExtension
         services.AddCaches(new[] { typeof(RequestEndpointCache).Assembly });
         services.AddHostedService<CacheWarmUpHostedService>();
         services.AddHttpClientServices();
-        services.AddAutoMapper(typeof(MapperProfile));
         return services;
     }
 
@@ -58,6 +56,7 @@ public static class DIExtension
         services.AddConfiguredHttpClient<ILegislationTypeProvider, LegislationTypeProvider>("GetMevzuatTypes");
         services.AddConfiguredHttpClient<ICaseLawTypeProvider, CaseLawTypeProvider>("GetIctihatTypes");
         services.AddConfiguredHttpClient<ICaseLawDocumentReferenceProvider, CaseLawDocumentReferenceProvider>("GetIctihatDocumentReferences");
+        services.AddConfiguredHttpClient<ILegislationDocumentReferenceProvider, LegislationDocumentReferenceProvider>("GetLegislationDocumentReferences");
         
         return services;
     }

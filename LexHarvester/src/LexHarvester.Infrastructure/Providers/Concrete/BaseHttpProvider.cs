@@ -1,6 +1,7 @@
 using System.Text;
 using LexHarvester.Infrastructure.Providers.Request;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace LexHarvester.Infrastructure.Providers.Concrete;
 
@@ -24,7 +25,11 @@ public abstract class BaseHttpProvider<TRequest, TResponse> : IBaseCilent<TReque
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod,
-                Content = new StringContent(JsonConvert.SerializeObject(requestModel), Encoding.UTF8, ContentType)
+                Content = new StringContent(JsonConvert.SerializeObject(requestModel, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                    Formatting = Formatting.None
+                }), Encoding.UTF8, ContentType)
             };
 
             var response = await _httpClient.SendAsync(request);

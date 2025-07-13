@@ -14,7 +14,6 @@ public class LegislationTypeSync : ITableSync
 
     public async Task SyncAsync(CancellationToken cancellationToken = default)
     {
-        LegislationTypeStepContext context = new();
         foreach (var step in _steps)
             await step.ExecuteAsync();
     }

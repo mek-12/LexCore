@@ -14,7 +14,7 @@ public static class DependencyInjection
     private static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddCQRS();
-
+        services.AddAutoMapper(typeof(LegislationMappingProfile)); // TO DO: NavendCore a al sonr. Profile dan türeyen tüm assemblyler i tara ve ekle.
         return services;
     }
     public static IServiceCollection RegisterServices(this IServiceCollection services, Action<IServiceCollection> action)
@@ -47,7 +47,6 @@ public static class DependencyInjection
 
         services.AddScoped<ICommandSender, CommandSender>();
         services.AddScoped<IQuerySender, QuerySender>();
-        services.AddAutoMapper(typeof(LegislationMappingProfile).Assembly); // TO DO: NavendCore a al sonr. Profile dan türeyen tüm assemblyler i tara ve ekle.
         return services;
     }
 

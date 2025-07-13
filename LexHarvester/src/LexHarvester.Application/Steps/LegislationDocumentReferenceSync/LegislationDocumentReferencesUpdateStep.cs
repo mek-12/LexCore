@@ -18,40 +18,47 @@ public class LegislationDocumentReferencesUpdateStep(IUnitOfWork unitOfWork,
 {
     public int Order => 1;
     private readonly IRepository<LegislationDocumentReference, long> _repository = unitOfWork.GetRepository<LegislationDocumentReference, long>();
-    public Task ExecuteAsync(CancellationToken cancellationToken = default)
+    private readonly IRepository<HarvestingState, int> _harvestingRepository = unitOfWork.GetRepository<HarvestingState, int>();
+    public async Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
         var legislationTypes = context.LegislationTypes.OrderBy(l => l.LegislationTypeCode);
-
+        HarvestingState? currentHarvestingState = null;
         try
         {
             foreach (var legislationType in legislationTypes)
             {
-                var state = context.HarvestingStates.FirstOrDefault(h => h.SubType == legislationType.LegislationTypeCode);
-                if (state == null)
+                currentHarvestingState = context.HarvestingStates.FirstOrDefault(h => h.SubType == legislationType.LegislationTypeCode);
+                if (currentHarvestingState == null)
                 {
-                    state = new HarvestingState { SubType = legislationType.LegislationTypeCode, DocumentType = DocumentType.Legislation };
-                    context.HarvestingStates.Add(state);
+                    currentHarvestingState = new HarvestingState { SubType = legislationType.LegislationTypeCode, DocumentType = DocumentType.Legislation };
+                    context.HarvestingStates.Add(currentHarvestingState);
                 }
-                if (state.Count == legislationType.Count) continue;
+                if (currentHarvestingState.Count >= legislationType.Count) continue;
 
-
+                await UpdateDocumentReferencesFromSource(currentHarvestingState, legislationType.Count);
+                currentHarvestingState.CurrentPage--;
             }
         }
         catch (Exception ex)
         {
-
+            if (currentHarvestingState != null)
+            {
+                currentHarvestingState.LastErrorMessage = ex.ToString();
+            }
+            // TO DO: Find usable logging mechanism for container platforms
         }
         finally
         {
-
+            await _harvestingRepository.UpdateRangeAsync(context.HarvestingStates);
         }
-        return Task.CompletedTask;
     }
 
     private async Task UpdateDocumentReferencesFromSource(HarvestingState state, int legislationCount)
     {
-        var totalPage = Math.Ceiling((decimal)(legislationCount / Constants.PAGE_SIZE));
-        for (int i = state.CurrentPage; i <= totalPage;)
+        var totalPage = Math.Ceiling((decimal)((double)legislationCount / Constants.PAGE_SIZE));
+        var _legislations = new List<LegislationDocumentReference>();
+
+        for (int i = state.CurrentPage; i <= totalPage; i = state.CurrentPage)
         {
             var response = await GetLegislationDocumentReferenceAsync(state);
             if (!response.Data.Legislations.Any())
@@ -65,21 +72,26 @@ public class LegislationDocumentReferencesUpdateStep(IUnitOfWork unitOfWork,
                 if (!context.LegislationIds.Contains(legislation.LegislationId))
                     state.Count++;
             });
-            await _repository.AddRangeAsync(legislations);
+            _legislations.AddRange(legislations);
         }
+        await _repository.AddRangeAsync(_legislations);
     }
 
     private async Task<LegislationDocumentReferenceResponse> GetLegislationDocumentReferenceAsync(HarvestingState state)
     {
-        return await documentReferenceProvider.SendAsync(new LegislationDocumentReferenceRequest
+        if (string.IsNullOrEmpty(state.SubType))
+        {
+            throw new ArgumentNullException(nameof(state.SubType));
+        }
+        var request = new LegislationDocumentReferenceRequest
         {
             Data = new LegislationRequestData
             {
-                MevzuatTurList = new List<string> { state.SubType ?? "" },
+                MevzuatTurList = new List<string> { state.SubType },
                 SortFields = new List<string> { Constants.RESMI_GAZETE_TARIHI },
                 PageNumber = state.CurrentPage++
             }
-        });
-
+        };
+        return await documentReferenceProvider.SendAsync(request);
     }
 }

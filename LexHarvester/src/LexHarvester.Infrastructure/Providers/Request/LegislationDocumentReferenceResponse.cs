@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Newtonsoft.Json;
 
 namespace LexHarvester.Infrastructure.Providers.Request;
@@ -36,10 +37,10 @@ public class LegislationDto
     public int LegislationTypeId => LegislationTypeObject?.Id ?? 0;
 
     [JsonProperty("kayitTarihi")]
-    public DateTime? RegistrationDate { get; set; }
+    public string RegistrationDate { get; set; }
 
     [JsonProperty("resmiGazeteTarihi")]
-    public DateTime? OfficialGazetteDate { get; set; }
+    public string OfficialGazetteDate { get; set; }
 
     [JsonProperty("resmiGazeteSayisi")]
     public string OfficialGazetteNumber { get; set; }
