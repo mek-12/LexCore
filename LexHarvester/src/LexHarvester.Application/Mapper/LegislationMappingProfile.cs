@@ -15,6 +15,18 @@ public class LegislationMappingProfile : Profile
             .ForMember(dest => dest.Downloaded, opt => opt.MapFrom(_ => false))
             .ForMember(dest => dest.Embedded, opt => opt.MapFrom(_ => false))
             .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
+            .ForMember(dest => dest.RegistrationDate, opt => opt.MapFrom(src =>
+                ParseDateOrDefault(src.RegistrationDate)
+            ))
+            .ForMember(dest => dest.OfficialGazetteDate, opt => opt.MapFrom(src =>
+                ParseDateOrDefault(src.OfficialGazetteDate)
+            ))
             .ForMember(dest => dest.Id, opt => opt.Ignore()); // DB tarafından atanabilir
+    }
+    private static DateTime? ParseDateOrDefault(string? dateString)
+    {
+        return DateTime.TryParse(dateString, out var parsed)
+            ? parsed
+            : null;
     }
 }

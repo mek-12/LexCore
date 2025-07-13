@@ -22,7 +22,6 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<LegislationDocumentReference>().HasIndex(x => x.LegislationId).IsUnique();
         modelBuilder.Entity<CaseLawDocumentReference>().HasIndex(x => x.DocumentId).IsUnique();
-        modelBuilder.Entity<LegislationDocumentReference>().HasIndex(x => x.LegislationTypeId).IsUnique();
         modelBuilder.Entity<CaseLawType>().HasIndex(x => x.Name).IsUnique();
         modelBuilder.Entity<HarvestingState>().HasIndex(x => x.Id).IsUnique();
     }
