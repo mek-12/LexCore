@@ -67,6 +67,7 @@ public class LegislationDocumentReferencesUpdateStep(IUnitOfWork unitOfWork,
             }
 
             var legislations = mapper.Map<List<LegislationDocumentReference>>(response.Data.Legislations);
+
             legislations.ForEach(legislation =>
             {
                 if (!context.LegislationIds.Contains(legislation.LegislationId))

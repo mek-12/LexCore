@@ -1,4 +1,6 @@
 using LexHarvester.Infrastructure.Cache;
+using LexHarvester.Infrastructure.Cache.Abstract;
+using LexHarvester.Infrastructure.Cache.Concrete;
 using LexHarvester.Infrastructure.Providers;
 using LexHarvester.Infrastructure.Providers.Abstract;
 using LexHarvester.Infrastructure.Providers.Concrete;
@@ -11,8 +13,7 @@ public static class DIExtension
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
-        services.AddSingleton<IRequestEndpointCache, RequestEndpointCache>();
-        services.AddCaches(new[] { typeof(RequestEndpointCache).Assembly });
+        services.AddCaches(new[] { typeof(RequestEndpointCache).Assembly }); // TO DO: Move cache mechanism to Navend.Core. Even create a new library named as Navend.Cache
         services.AddHostedService<CacheWarmUpHostedService>();
         services.AddHttpClientServices();
         return services;
@@ -21,6 +22,8 @@ public static class DIExtension
     private static IServiceCollection AddCaches(this IServiceCollection services, params Assembly[] assemblies)
     {
         // Mevcut assembly'deki tüm sınıfları al
+        services.AddSingleton<IRequestEndpointCache, RequestEndpointCache>();
+        services.AddSingleton<ISyncConfigurationCache, SyncConfigurationCache>();
         var cacheServices = Assembly.GetExecutingAssembly().GetTypes()
             // `IBaseCacheService<>` ve `ICacheWarmUpService`'i implement eden sınıfları bul
             .Where(t => t.IsClass && !t.IsAbstract &&

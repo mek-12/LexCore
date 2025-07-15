@@ -14,7 +14,7 @@ public static class DependencyInjection
     private static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddCQRS();
-        services.AddAutoMapper(typeof(LegislationMappingProfile)); // TO DO: NavendCore a al sonr. Profile dan türeyen tüm assemblyler i tara ve ekle.
+        services.AddAutoMapper(typeof(AutoMapping)); // TO DO: NavendCore a al sonr. Profile dan türeyen tüm assemblyler i tara ve ekle.
         return services;
     }
     public static IServiceCollection RegisterServices(this IServiceCollection services, Action<IServiceCollection> action)

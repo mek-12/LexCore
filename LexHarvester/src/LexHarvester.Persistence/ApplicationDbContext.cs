@@ -19,7 +19,11 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<LegislationDocumentReference>().ToTable(nameof(LegislationDocumentReference));
         modelBuilder.Entity<CaseLawDocumentReference>().ToTable(nameof(CaseLawDocumentReference));
+        modelBuilder.Entity<SyncConfiguration>().ToTable(nameof(SyncConfiguration));
+        modelBuilder.Entity<CaseLawDivision>().ToTable(nameof(CaseLawDivision));
 
+        modelBuilder.Entity<CaseLawDivision>().HasIndex(x => x.ItemType);
+        modelBuilder.Entity<SyncConfiguration>().HasIndex(x => x.SyncName).IsUnique();
         modelBuilder.Entity<LegislationDocumentReference>().HasIndex(x => x.LegislationId).IsUnique();
         modelBuilder.Entity<CaseLawDocumentReference>().HasIndex(x => x.DocumentId).IsUnique();
         modelBuilder.Entity<CaseLawType>().HasIndex(x => x.Name).IsUnique();

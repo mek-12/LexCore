@@ -6,9 +6,7 @@ public abstract class BaseCacheService<T> : IBaseCacheService<T>
 {
     private ConcurrentDictionary<string, T> _cache = new();
 
-    protected BaseCacheService()
-    {
-    }
+    protected BaseCacheService() { }
 
     public T? Get(string key)
     {
@@ -53,5 +51,4 @@ public abstract class BaseCacheService<T> : IBaseCacheService<T>
     {
         return _cache.ContainsKey(key);
     }
-
 }

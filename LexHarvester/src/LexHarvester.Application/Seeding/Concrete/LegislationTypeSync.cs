@@ -5,7 +5,7 @@ namespace LexHarvester.Application.Seeding;
 
 public class LegislationTypeSync : ITableSync
 {
-    public int Order => 1;
+    public int Order => 1001;
     private readonly List<IStep<LegislationTypeStepContext>> _steps;
     public LegislationTypeSync(IEnumerable<IStep<LegislationTypeStepContext>> steps)
     {
