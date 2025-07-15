@@ -26,7 +26,7 @@ try
 {
     app = builder.Build();
 }
-catch (System.AggregateException ex)
+catch (AggregateException ex)
 {
     
     throw ex;

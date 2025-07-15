@@ -15,10 +15,14 @@ public class CaseLawDivisionTableUpdateStep(IMapper mapper,
     public async Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
         var filteredDivisions = context.CaseLawDivisionResponses
-                                       .Where(d => !context.DivisionsUnitIds
-                                                   .Any(x => x.UnitId == d.UnitId &&
-                                                             x.ItemType == d.ItemType));
+                                       .Where(d => !context.DivisionsUnitIds.Contains((d.UnitId, d.ItemType)))
+                                       .ToList();
+
         var caseLawDivisions = mapper.Map<List<CaseLawDivision>>(filteredDivisions);
+
+        caseLawDivisions = caseLawDivisions.Where(c => !string.IsNullOrWhiteSpace(c.ItemType) &&
+                                                       !string.IsNullOrWhiteSpace(c.Name)).ToList();
+
         await repository.AddRangeAsync(caseLawDivisions);
     }
 }

@@ -1,6 +1,7 @@
 using AutoMapper;
 using LexHarvester.Domain.Entities;
 using LexHarvester.Infrastructure.Providers.Request;
+using LexHarvester.Infrastructure.Providers.Respose;
 
 namespace LexHarvester.Application.Mapper;
 
@@ -22,6 +23,7 @@ public class AutoMapping : Profile
                 ParseDateOrDefault(src.OfficialGazetteDate)
             ))
             .ForMember(dest => dest.Id, opt => opt.Ignore()); // DB tarafından atanabilir
+        CreateMap<CaseLawDivision, CaseLawDivisionData>().ReverseMap();
     }
     private static DateTime? ParseDateOrDefault(string? dateString)
     {
