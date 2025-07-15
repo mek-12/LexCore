@@ -1,34 +1,32 @@
+using LexHarvester.Domain.DTOs;
+using LexHarvester.Infrastructure.Cache.Abstract;
 using Microsoft.Extensions.Logging;
 
 namespace LexHarvester.Application.Seeding;
 
-public class TableSyncOrchestrator : ITableSyncOrchestrator
+public class TableSyncOrchestrator(IEnumerable<ITableSync> seeders,
+                                   ILogger<TableSyncOrchestrator> logger,
+                                   ISyncConfigurationCache syncConfiguration) : ITableSyncOrchestrator
 {
-    private readonly IEnumerable<ITableSync> _seeders;
-    private readonly ILogger<TableSyncOrchestrator> _logger;
-
-    public TableSyncOrchestrator(IEnumerable<ITableSync> seeders, ILogger<TableSyncOrchestrator> logger)
-    {
-        _seeders = seeders;
-        _logger = logger;
-    }
-
     public async Task RunAsync(CancellationToken cancellationToken = default)
     {
-        foreach (var seeder in _seeders)
+        foreach (var seeder in seeders)
         {
             try
             {
+                var isActive = syncConfiguration.TryGet(seeder.Name, out SyncConfigurationDto? conf) ? conf?.IsActive ?? true : true;
+                if (!isActive) continue;
+
                 var seederType = seeder.GetType().Name;
-                _logger.LogInformation("Seeder started: {Seeder}", seederType);
+                logger.LogInformation("Seeder started: {Seeder}", seederType);
 
                 await seeder.SyncAsync(cancellationToken);
 
-                _logger.LogInformation("Seeder finished: {Seeder}", seederType);
+                logger.LogInformation("Seeder finished: {Seeder}", seederType);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Seeder failed: {Seeder}", seeder.GetType().Name);
+                logger.LogError(ex, "Seeder failed: {Seeder}", seeder.GetType().Name);
             }
         }
     }

@@ -6,25 +6,17 @@ using Navend.Core.UOW;
 
 namespace LexHarvester.Application.Seeding.Concrete;
 
-public class CaseLawTypeSync : ITableSync
+public class CaseLawTypeSync(IUnitOfWork unitOfWork,
+                             ICaseLawTypeProvider caseLawTypeProvider) : ITableSync
 {
-    public int Order => 1;
-    private readonly IUnitOfWork _unitOfWork;
-    private IRepository<CaseLawType, int> _repository;
-    private ICaseLawTypeProvider _caseLawTypeProvider;
-    public CaseLawTypeSync(IUnitOfWork unitOfWork, ICaseLawTypeProvider caseLawTypeProvider)
-    {
-        _unitOfWork = unitOfWork;
-        _repository = _unitOfWork.GetRepository<CaseLawType, int>();
-        _caseLawTypeProvider = caseLawTypeProvider;
-    }
-    
+    public int Order => 1000;
+    private IRepository<CaseLawType, int> _repository =  unitOfWork.GetRepository<CaseLawType, int>();    
     public async Task SyncAsync(CancellationToken cancellationToken = default)
     {
         bool isEmpty = await _repository.GetCountAsync(r => r.Id == r.Id) == 0; // koşul doğru olmadı. Sonra yine bakalım
         if (!isEmpty)
             return;
-        var caseLawTypeResponse =  await _caseLawTypeProvider.SendAsync(new CaseLawTypeRequest());
+        var caseLawTypeResponse =  await caseLawTypeProvider.SendAsync(new CaseLawTypeRequest());
         if (caseLawTypeResponse == null)
             return;
         var types = new List<CaseLawType>();

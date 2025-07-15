@@ -4,9 +4,9 @@ using LexHarvester.Infrastructure.Providers.Request;
 
 namespace LexHarvester.Application.Mapper;
 
-public class LegislationMappingProfile : Profile
+public class AutoMapping : Profile
 {
-    public LegislationMappingProfile()
+    public AutoMapping()
     {
         CreateMap<LegislationDto, LegislationDocumentReference>()
             .ForMember(dest => dest.LegislationType, opt => opt.MapFrom(src => src.LegislationType))

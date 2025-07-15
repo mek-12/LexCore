@@ -5,7 +5,7 @@ namespace LexHarvester.Application.Seeding.Concrete;
 
 public class LegislationDocumentReferenceSync(IEnumerable<IStep<LegislationDocumentReferenceStepContext>> steps) : ITableSync
 {
-    public int Order => 2;
+    public int Order => 2000;
 
     public async Task SyncAsync(CancellationToken cancellationToken = default)
     {

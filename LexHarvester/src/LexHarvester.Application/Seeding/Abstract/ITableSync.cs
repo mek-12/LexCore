@@ -13,5 +13,6 @@ public interface ITableSync
     /// This is useful for ensuring that certain tables are synced before others, or that certain data is available before other operations are performed.
     /// </summary>
     int Order { get; }
+    virtual string Name { get => this.GetType().Name; }   
     Task SyncAsync(CancellationToken cancellationToken = default);
 }
