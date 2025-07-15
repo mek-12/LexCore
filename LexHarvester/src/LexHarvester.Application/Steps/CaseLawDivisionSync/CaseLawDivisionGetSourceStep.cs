@@ -11,7 +11,7 @@ public class CaseLawDivisionGetSourceStep(ICaseLawDivisionProvider caseLawDivisi
 
     public async Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        caseLawDivisionContext.CaseLawTypes.ForEach(async lawType =>
+        foreach (var lawType in caseLawDivisionContext.CaseLawTypes)
         {
             var response = await caseLawDivisionProvider.SendAsync(new CaseLawDivisionRequest
             {
@@ -22,6 +22,6 @@ public class CaseLawDivisionGetSourceStep(ICaseLawDivisionProvider caseLawDivisi
             });
             if (response.Data != null && response.Data.Any())
                 caseLawDivisionContext.CaseLawDivisionResponses.AddRange(response.Data);
-        });
+        }
     }
 }

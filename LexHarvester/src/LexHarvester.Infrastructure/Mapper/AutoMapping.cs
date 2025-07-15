@@ -9,7 +9,7 @@ public class AutoMapping : Profile
 {
     public AutoMapping()
     {
-        CreateMap<SyncConfiguration, SyncConfigurationDto>().ReverseMap();
+        CreateMap<SyncConfiguration, SyncConfigurationDto>();
         CreateMap<CaseLawDivisionResponse, CaseLawDivision>().ReverseMap();
     }
 }

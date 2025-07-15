@@ -1,6 +1,7 @@
 using LexHarvester.Infrastructure.Cache;
 using LexHarvester.Infrastructure.Cache.Abstract;
 using LexHarvester.Infrastructure.Cache.Concrete;
+using LexHarvester.Infrastructure.Mapper;
 using LexHarvester.Infrastructure.Providers;
 using LexHarvester.Infrastructure.Providers.Abstract;
 using LexHarvester.Infrastructure.Providers.Concrete;
@@ -13,6 +14,7 @@ public static class DIExtension
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
+        services.AddAutoMapper(typeof(AutoMapping)); // TO DO: NavendCore a al sonr. Profile dan türeyen tüm assemblyler i tara ve ekle.
         services.AddCaches(new[] { typeof(RequestEndpointCache).Assembly }); // TO DO: Move cache mechanism to Navend.Core. Even create a new library named as Navend.Cache
         services.AddHostedService<CacheWarmUpHostedService>();
         services.AddHttpClientServices();
@@ -56,11 +58,13 @@ public static class DIExtension
     }
     private static IServiceCollection AddHttpClientServices(this IServiceCollection services)
     {
+        // TO DO: Navend.Core a al
         services.AddConfiguredHttpClient<ILegislationTypeProvider, LegislationTypeProvider>("GetMevzuatTypes");
         services.AddConfiguredHttpClient<ICaseLawTypeProvider, CaseLawTypeProvider>("GetIctihatTypes");
         services.AddConfiguredHttpClient<ICaseLawDocumentReferenceProvider, CaseLawDocumentReferenceProvider>("GetIctihatDocumentReferences");
         services.AddConfiguredHttpClient<ILegislationDocumentReferenceProvider, LegislationDocumentReferenceProvider>("GetLegislationDocumentReferences");
-        
+        services.AddConfiguredHttpClient<ICaseLawDivisionProvider, CaseLawDivisionProvider>("GetCaseLawDivision"); 
+
         return services;
     }
     private static IHttpClientBuilder AddConfiguredHttpClient<TInterface, TImplementation>(
