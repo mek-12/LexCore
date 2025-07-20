@@ -89,7 +89,6 @@ public class LegislationDocumentReferencesUpdateStep(IUnitOfWork unitOfWork,
             Data = new LegislationRequestData
             {
                 MevzuatTurList = new List<string> { state.SubType },
-                SortFields = new List<string> { Constants.RESMI_GAZETE_TARIHI },
                 PageNumber = state.CurrentPage++
             }
         };

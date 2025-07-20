@@ -17,7 +17,7 @@ public class CaseLawDocumentReferenceDto
     [JsonProperty("kararNoYil")]
     public string? DecisionNumberYear { get; set; } // KararNoYil
     [JsonProperty("kararNoSira")]
-    public int DecisionNumberSequence { get; set; } // KararNoSira
+    public int? DecisionNumberSequence { get; set; } // KararNoSira
     [JsonProperty("kararTuru")]
     public string? DecisionType { get; set; } // KararTürü
     [JsonProperty("kararTarihi")]
