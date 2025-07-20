@@ -21,6 +21,7 @@ public class HangfireController : ControllerBase
     [HttpPost("job/{jobName}")]
     public ActionResult<string> RunJob(string jobName, [FromBody] JobRequest jobRequest)
     {
+        //TO DO: We must add a cache with redis. Cache should be use for blocker
         var job = _jobFactory(jobName);
         
         var executedJobId = Hangfire.BackgroundJob.Enqueue(() => job.Run(jobRequest, DateTime.UtcNow));

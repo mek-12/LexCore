@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace LexHarvester.Infrastructure.Providers.Request;
 
 public class CaseLawDocumentReferenceRequest : LexBaseRequest
@@ -7,4 +9,6 @@ public class CaseLawDocumentReferenceRequest : LexBaseRequest
 public class CaseLawData : PagingBaseData
 {
     public List<string> ItemTypeList { get; set; } = new();
+    [JsonProperty("birimAdi")]
+    public string DivisionName { get; set; } = string.Empty;
 }
