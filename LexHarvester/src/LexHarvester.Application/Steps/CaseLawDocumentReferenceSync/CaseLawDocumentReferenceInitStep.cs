@@ -1,5 +1,6 @@
 using LexHarvester.Domain.Entities;
 using LexHarvester.Domain.Enums;
+using LexHarvester.Helper.Utils.ConcurrentBag;
 using Navend.Core.Data;
 using Navend.Core.Step.Abstract;
 using Navend.Core.UOW;

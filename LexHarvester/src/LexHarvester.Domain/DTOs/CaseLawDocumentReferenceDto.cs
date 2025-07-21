@@ -1,3 +1,4 @@
+using LexHarvester.Helper.Utils.JsonUtils;
 using Newtonsoft.Json;
 
 namespace LexHarvester.Domain.DTOs;
@@ -21,6 +22,7 @@ public class CaseLawDocumentReferenceDto
     [JsonProperty("kararTuru")]
     public string? DecisionType { get; set; } // KararTürü
     [JsonProperty("kararTarihi")]
+    [JsonConverter(typeof(SafeDateTimeConverter))]
     public DateTime? DecisionDate { get; set; } // KararTarihi
     [JsonProperty("kararTarihiStr")]
     public string? DecisionDateStr { get; set; } // KararTarihiStr

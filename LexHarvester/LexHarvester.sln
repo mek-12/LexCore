@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexHarvester.Infrastructure
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexHarvester.Persistence", "src\LexHarvester.Persistence\LexHarvester.Persistence.csproj", "{9ED895B1-1448-468C-A0D3-0B19DC270292}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexHarvester.Helper", "src\LexHarvester.Helper\LexHarvester.Helper.csproj", "{C42195F2-E9D4-4E49-8220-A0DA57F4FC6D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,18 @@ Global
 		{9ED895B1-1448-468C-A0D3-0B19DC270292}.Release|x64.Build.0 = Release|Any CPU
 		{9ED895B1-1448-468C-A0D3-0B19DC270292}.Release|x86.ActiveCfg = Release|Any CPU
 		{9ED895B1-1448-468C-A0D3-0B19DC270292}.Release|x86.Build.0 = Release|Any CPU
+		{C42195F2-E9D4-4E49-8220-A0DA57F4FC6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C42195F2-E9D4-4E49-8220-A0DA57F4FC6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C42195F2-E9D4-4E49-8220-A0DA57F4FC6D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C42195F2-E9D4-4E49-8220-A0DA57F4FC6D}.Debug|x64.Build.0 = Debug|Any CPU
+		{C42195F2-E9D4-4E49-8220-A0DA57F4FC6D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C42195F2-E9D4-4E49-8220-A0DA57F4FC6D}.Debug|x86.Build.0 = Debug|Any CPU
+		{C42195F2-E9D4-4E49-8220-A0DA57F4FC6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C42195F2-E9D4-4E49-8220-A0DA57F4FC6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C42195F2-E9D4-4E49-8220-A0DA57F4FC6D}.Release|x64.ActiveCfg = Release|Any CPU
+		{C42195F2-E9D4-4E49-8220-A0DA57F4FC6D}.Release|x64.Build.0 = Release|Any CPU
+		{C42195F2-E9D4-4E49-8220-A0DA57F4FC6D}.Release|x86.ActiveCfg = Release|Any CPU
+		{C42195F2-E9D4-4E49-8220-A0DA57F4FC6D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,5 +109,6 @@ Global
 		{47036FD4-75DD-49FB-B7E0-6737479C383E} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{1188EFC9-D6EB-4C43-986A-D5A9A30B5DDC} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{9ED895B1-1448-468C-A0D3-0B19DC270292} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{C42195F2-E9D4-4E49-8220-A0DA57F4FC6D} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 	EndGlobalSection
 EndGlobal
