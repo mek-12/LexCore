@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using LexHarvester.Domain.Entities;
 using LexHarvester.Domain.Enums;
 
@@ -5,9 +6,13 @@ namespace LexHarvester.Application.Extensions;
 
 public static class HarvestingStateExtension
 {
-    public static HarvestingState Get(this List<HarvestingState> states, DocumentType documentType, string subType)
+    public static HarvestingState Get(this ConcurrentBag<HarvestingState> states, DocumentType documentType, string subType)
     {
-        var state = states.Where(h => h.DocumentType == documentType && h.SubType == subType)?.FirstOrDefault();
+        // Snapshot al: LINQ operasyonları için thread-safe hale gelir
+        var snapshot = states.ToList();
+
+        var state = snapshot.FirstOrDefault(h => h.DocumentType == documentType && h.SubType == subType);
+
         if (state is null)
         {
             state = new HarvestingState
@@ -22,8 +27,10 @@ public static class HarvestingStateExtension
                 LastErrorMessage = string.Empty,
                 LastUpdated = DateTime.Now
             };
-            states.Add(state);
+
+            states.Add(state); // ConcurrentBag thread-safe olduğu için doğrudan ekleyebilirsin
         }
+
         return state;
     }
 }

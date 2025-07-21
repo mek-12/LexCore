@@ -17,17 +17,38 @@ public class CaseLawDocumentReferenceFetchStep(IMapper mapper,
     public int Order => 1;
     public async Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
+        var semaphore = new SemaphoreSlim(100);
+        var tasks = new List<Task>();
+
         foreach (var caseLawType in context.CaseLawTypes)
         {
             var divisions = context.CaseLawDivisions.Where(d => d.ItemType == caseLawType.Name);
             foreach (var division in divisions)
             {
-                await UpdateDocumentReferences(caseLawType, division);
+                await semaphore.WaitAsync(cancellationToken); // slot boşalana kadar bekler
+
+                // Task'i başlat, sonra iş bitince semaphore'u serbest bırak
+                var task = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await UpdateDocumentReferences(caseLawType, division);
+                    }
+                    finally
+                    {
+                        semaphore.Release(); // slot'u serbest bırak
+                    }
+                }, cancellationToken);
+
+                tasks.Add(task);
             }
         }
+
+        await Task.WhenAll(tasks); // Tüm görevlerin bitmesini bekle
     }
 
-    private async Task UpdateDocumentReferences(CaseLawType caseLawType, CaseLawDivision division) {
+    private async Task UpdateDocumentReferences(CaseLawType caseLawType, CaseLawDivision division)
+    {
         var stateSubType = $"{caseLawType.Name}_{division.Name}";
         var state = context.HarvestingStates.Get(DocumentType.CaseLaw, stateSubType);
 
@@ -74,7 +95,10 @@ public class CaseLawDocumentReferenceFetchStep(IMapper mapper,
         var caseLawDocuments = mapper.Map<List<CaseLawDocumentReference>>(documents.Where(d => d.DocumentId != null && !context.CaseLawDocumentIds.Contains(d.DocumentId)));
         if (caseLawDocuments.Any())
         {
-            context.CaseLawDocumentReferences.AddRange(caseLawDocuments);
+            foreach (var item in caseLawDocuments)
+            {
+                context.CaseLawDocumentReferences.Add(item);
+            }
         }
     }
 }
