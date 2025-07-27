@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Navend.Core.Data;
 
 namespace LexHarvester.Domain.Entities;
@@ -5,8 +7,10 @@ namespace LexHarvester.Domain.Entities;
 // Formerly: IctihatDocument
 public class CaseLawDocumentReference: IEntity<long>
 {
-    public long Id { get; set; }
-    public string DocumentId { get; set; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public long Id { get; set; } = default;
+    public string DocumentId { get; set; } = string.Empty;
     public string? ItemTypeName { get; set; }
     public string? ItemTypeDescription { get; set; }
     public string? UnitName { get; set; } // BirimAdi

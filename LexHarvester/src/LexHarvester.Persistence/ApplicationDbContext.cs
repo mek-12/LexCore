@@ -14,7 +14,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<RequestEndpointConfig> RequestEndpointConfigs { get; set; }
     public DbSet<HarvestingState> HarvestingStates { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder) {
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<LegislationDocumentReference>().ToTable(nameof(LegislationDocumentReference));
@@ -27,6 +28,6 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<LegislationDocumentReference>().HasIndex(x => x.LegislationId).IsUnique();
         modelBuilder.Entity<CaseLawDocumentReference>().HasIndex(x => x.DocumentId).IsUnique();
         modelBuilder.Entity<CaseLawType>().HasIndex(x => x.Name).IsUnique();
-        modelBuilder.Entity<HarvestingState>().HasIndex(x => x.Id).IsUnique();
+        modelBuilder.Entity<HarvestingState>().HasIndex(x => x.SubType).IsUnique();
     }
 }

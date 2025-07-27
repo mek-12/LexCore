@@ -10,7 +10,6 @@ public class CaseLawDocumentReferenceContext : StepContext
     public List<CaseLawDivision> CaseLawDivisions { get; set; } = new();
     public ConcurrentBag<HarvestingState> HarvestingStates { get; set; } = new();
     public ConcurrentBag<CaseLawDocumentReference> CaseLawDocumentReferences { get; set; } = new();
-
     public List<string> CaseLawDocumentIds { get; set; } = new();
 }
     
