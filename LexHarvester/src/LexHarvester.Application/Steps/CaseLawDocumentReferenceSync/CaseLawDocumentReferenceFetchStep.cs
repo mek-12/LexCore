@@ -17,7 +17,7 @@ public class CaseLawDocumentReferenceFetchStep(IMapper mapper,
     public int Order => 1;
     public async Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        var semaphore = new SemaphoreSlim(100);
+        var semaphore = new SemaphoreSlim(20); // aynı anda 100 işlem sınırı
         var tasks = new List<Task>();
 
         foreach (var caseLawType in context.CaseLawTypes)
@@ -25,26 +25,28 @@ public class CaseLawDocumentReferenceFetchStep(IMapper mapper,
             var divisions = context.CaseLawDivisions.Where(d => d.ItemType == caseLawType.Name);
             foreach (var division in divisions)
             {
-                await semaphore.WaitAsync(cancellationToken); // slot boşalana kadar bekler
-
-                // Task'i başlat, sonra iş bitince semaphore'u serbest bırak
-                var task = Task.Run(async () =>
-                {
-                    try
-                    {
-                        await UpdateDocumentReferences(caseLawType, division);
-                    }
-                    finally
-                    {
-                        semaphore.Release(); // slot'u serbest bırak
-                    }
-                }, cancellationToken);
-
-                tasks.Add(task);
+                // İşlemi bir yardımcı methoda sar: Task.Run kullanmadan
+                tasks.Add(RunWithSemaphoreAsync(() =>
+                    UpdateDocumentReferences(caseLawType, division),
+                    semaphore,
+                    cancellationToken));
             }
         }
 
-        await Task.WhenAll(tasks); // Tüm görevlerin bitmesini bekle
+        await Task.WhenAll(tasks); // Hepsini bekle
+    }
+
+    private async Task RunWithSemaphoreAsync(Func<Task> taskFunc, SemaphoreSlim semaphore, CancellationToken ct)
+    {
+        await semaphore.WaitAsync(ct);
+        try
+        {
+            await taskFunc();
+        }
+        finally
+        {
+            semaphore.Release();
+        }
     }
 
     private async Task UpdateDocumentReferences(CaseLawType caseLawType, CaseLawDivision division)
