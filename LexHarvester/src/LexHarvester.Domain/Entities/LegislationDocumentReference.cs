@@ -17,6 +17,5 @@ public class LegislationDocumentReference: IEntity<long>
     public string? Url { get; set; } = string.Empty;
     public string? FilePath { get; set; } = string.Empty;
     public bool Downloaded { get; set; }
-    public bool Embedded { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

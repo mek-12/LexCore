@@ -15,7 +15,6 @@ public class AutoMapping : Profile
             .ForMember(dest => dest.LegislationTypeId, opt => opt.MapFrom(src => src.LegislationTypeId))
             .ForMember(dest => dest.FilePath, opt => opt.Ignore())
             .ForMember(dest => dest.Downloaded, opt => opt.MapFrom(_ => false))
-            .ForMember(dest => dest.Embedded, opt => opt.MapFrom(_ => false))
             .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
             .ForMember(dest => dest.RegistrationDate, opt => opt.MapFrom(src =>
                 ParseDateOrDefault(src.RegistrationDate)
@@ -42,7 +41,6 @@ public class AutoMapping : Profile
             .ForMember(dest => dest.DocumentId, opt => opt.MapFrom(src => src.DocumentId ?? string.Empty))
             .ForMember(dest => dest.FilePath, opt => opt.Ignore())
             .ForMember(dest => dest.Downloaded, opt => opt.Ignore())
-            .ForMember(dest => dest.Embedded, opt => opt.Ignore())
             .ForMember(dest => dest.CreatedAt, opt => opt.Ignore());
 
         CreateMap<CaseLawDocumentReference, CaseLawDocumentReferenceDto>()

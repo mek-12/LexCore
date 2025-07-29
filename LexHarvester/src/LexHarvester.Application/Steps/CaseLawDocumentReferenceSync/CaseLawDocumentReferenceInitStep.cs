@@ -19,7 +19,7 @@ public class CaseLawDocumentReferenceInitStep(IUnitOfWork unitOfWork,
     {
         caseLawDocumentReferenceContext.CaseLawDivisions = await _caseLawDivisionRepository.GetAllAsync();
         caseLawDocumentReferenceContext.CaseLawTypes = await _caseLawTypeRepository.GetAllAsync();
-        caseLawDocumentReferenceContext.HarvestingStates.AddRange(await _harvestingStateRepository.GetAllAsync(h => h.DocumentType == DocumentType.CaseLaw));
-        caseLawDocumentReferenceContext.CaseLawDocumentIds.AddRange(await _caseLawDocumentReference.SelectAsync(null, c => c.DocumentId));
+        caseLawDocumentReferenceContext.HarvestingStates.AddRange(await _harvestingStateRepository.GetAllAsync(h => h.DocumentType == DocumentType.CaseLaw, true));
+        caseLawDocumentReferenceContext.CaseLawDocumentIds.AddRange(await _caseLawDocumentReference.SelectAsync(null, c => c.DocumentId, true));
     }
 }
