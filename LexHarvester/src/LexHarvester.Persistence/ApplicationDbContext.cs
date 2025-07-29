@@ -26,7 +26,9 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<CaseLawDivision>().HasIndex(x => x.ItemType);
         modelBuilder.Entity<SyncConfiguration>().HasIndex(x => x.SyncName).IsUnique();
         modelBuilder.Entity<LegislationDocumentReference>().HasIndex(x => x.LegislationId).IsUnique();
+        modelBuilder.Entity<LegislationDocumentReference>().HasIndex(x => x.LegislationType);
         modelBuilder.Entity<CaseLawDocumentReference>().HasIndex(x => x.DocumentId).IsUnique();
+        modelBuilder.Entity<CaseLawDocumentReference>().HasIndex(x => x.ItemTypeName);
         modelBuilder.Entity<CaseLawType>().HasIndex(x => x.Name).IsUnique();
         modelBuilder.Entity<HarvestingState>().HasIndex(x => x.SubType).IsUnique();
     }
