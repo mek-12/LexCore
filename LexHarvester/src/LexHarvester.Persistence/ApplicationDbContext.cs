@@ -13,6 +13,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<CaseLawType> CaseLawTypes { get; set; }
     public DbSet<RequestEndpointConfig> RequestEndpointConfigs { get; set; }
     public DbSet<HarvestingState> HarvestingStates { get; set; }
+    public DbSet<LexDocument> LexDocuments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -22,6 +23,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<CaseLawDocumentReference>().ToTable(nameof(CaseLawDocumentReference));
         modelBuilder.Entity<SyncConfiguration>().ToTable(nameof(SyncConfiguration));
         modelBuilder.Entity<CaseLawDivision>().ToTable(nameof(CaseLawDivision));
+        modelBuilder.Entity<LexDocument>().ToTable(nameof(LexDocument));
 
         modelBuilder.Entity<CaseLawDivision>().HasIndex(x => x.ItemType);
         modelBuilder.Entity<SyncConfiguration>().HasIndex(x => x.SyncName).IsUnique();
