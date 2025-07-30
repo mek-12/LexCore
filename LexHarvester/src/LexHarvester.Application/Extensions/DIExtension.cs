@@ -1,5 +1,4 @@
 using System.Reflection;
-using LexHarvester.Application.Contracts.CQRS;
 using LexHarvester.Application.Jobs;
 using LexHarvester.Application.Mapper;
 using LexHarvester.Application.Seeding;
@@ -13,7 +12,6 @@ public static class DependencyInjection
     private static readonly List<Type> jobTypes = new List<Type>();
     private static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddCQRS();
         services.AddAutoMapper(typeof(AutoMapping)); // TO DO: NavendCore a al sonr. Profile dan türeyen tüm assemblyler i tara ve ekle.
         return services;
     }
@@ -24,29 +22,6 @@ public static class DependencyInjection
         services.AddApplication();
         services.AddSeeders();
         action(services);
-        return services;
-    }
-
-    private static IServiceCollection AddCQRS(this IServiceCollection services)
-    {
-
-        var assembly = Assembly.GetExecutingAssembly();
-
-        var commandHandlerTypes = assembly.GetTypes()
-                                          .Where(t => t.GetInterfaces().Any(i => i.IsGenericType &&
-                                                                            i.GetGenericTypeDefinition() == typeof(ICommandHandler<>)))
-            .ToList();
-
-        foreach (var handlerType in commandHandlerTypes)
-        {
-            var interfaceType = handlerType.GetInterfaces()
-                .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommandHandler<>));
-
-            services.AddScoped(interfaceType, handlerType);
-        }
-
-        services.AddScoped<ICommandSender, CommandSender>();
-        services.AddScoped<IQuerySender, QuerySender>();
         return services;
     }
 
