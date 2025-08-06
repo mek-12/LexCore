@@ -64,7 +64,8 @@ public static class DIExtension
         services.AddConfiguredHttpClient<ICaseLawDocumentReferenceProvider, CaseLawDocumentReferenceProvider>("GetIctihatDocumentReferences");
         services.AddConfiguredHttpClient<ILegislationDocumentReferenceProvider, LegislationDocumentReferenceProvider>("GetLegislationDocumentReferences");
         services.AddConfiguredHttpClient<ICaseLawDivisionProvider, CaseLawDivisionProvider>("GetCaseLawDivision"); 
-
+        services.AddConfiguredHttpClient<ILegislationDocumentProvider, LegislationDocumentProvider>("GetLegislationDocuments"); 
+        // services.AddConfiguredHttpClient<ICaseLawDocumentProvider, CaseLawDocumentProvider>("GetCaseLawDocuments"); 
         return services;
     }
     private static IHttpClientBuilder AddConfiguredHttpClient<TInterface, TImplementation>(
