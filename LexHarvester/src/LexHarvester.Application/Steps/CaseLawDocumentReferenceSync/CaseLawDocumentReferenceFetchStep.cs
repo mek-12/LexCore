@@ -17,7 +17,7 @@ public class CaseLawDocumentReferenceFetchStep(IMapper mapper,
     public int Order => 1;
     public async Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        var semaphore = new SemaphoreSlim(20); // aynı anda 100 işlem sınırı
+        var semaphore = new SemaphoreSlim(20); // aynı anda 20 işlem sınırı
         var tasks = new List<Task>();
 
         foreach (var caseLawType in context.CaseLawTypes)

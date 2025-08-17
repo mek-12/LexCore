@@ -3,6 +3,7 @@ using LexHarvester.Application.Jobs;
 using LexHarvester.Application.Mapper;
 using LexHarvester.Application.Seeding;
 using LexHarvester.Infrastructure.Extension;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LexHarvester.Application.Extensions;
@@ -15,10 +16,10 @@ public static class DependencyInjection
         services.AddAutoMapper(typeof(AutoMapping)); // TO DO: NavendCore a al sonr. Profile dan türeyen tüm assemblyler i tara ve ekle.
         return services;
     }
-    public static IServiceCollection RegisterServices(this IServiceCollection services, Action<IServiceCollection> action)
+    public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration configuration, Action<IServiceCollection> action)
     {
         services.AddHfJobs();
-        services.AddInfrastructureServices();
+        services.AddInfrastructureServices(configuration);
         services.AddApplication();
         services.AddSeeders();
         action(services);

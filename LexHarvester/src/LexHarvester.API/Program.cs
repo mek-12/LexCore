@@ -14,7 +14,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 // Eğer ileride servisler eklersen burada builder.Services.AddScoped<>, AddSingleton<> gibi eklemeler yapılacak
 
-builder.Services.RegisterServices(collection => {
+builder.Services.RegisterServices(builder.Configuration, collection => {
     collection.AddEfCoreUnitOfWork<ApplicationDbContext>(builder.Configuration);
     collection.AddEndpointsApiExplorer();
     collection.AddSwaggerGen();

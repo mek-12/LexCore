@@ -1,11 +1,12 @@
 using LexHarvester.Domain.DTOs;
 using LexHarvester.Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
+using Navend.Core.Caching.Concrete;
 using Navend.Core.UOW;
 
 namespace LexHarvester.Infrastructure.Cache;
 
-public class RequestEndpointCache : BaseCacheService<RequestEndpointConfigDto>, IRequestEndpointCache
+public class RequestEndpointCache : InMemoryCache<RequestEndpointConfigDto>, IRequestEndpointCache
 {
     private readonly IServiceProvider _serviceProvider;
     public RequestEndpointCache(IServiceProvider serviceProvider)

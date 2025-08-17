@@ -5,13 +5,8 @@ namespace LexHarvester.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class HangfireController : ControllerBase
+public class HangfireController(Func<string, IJob> jobFactory) : ControllerBase
 {
-    private readonly Func<string, IJob> _jobFactory;
-    public HangfireController(Func<string, IJob> jobFactory)
-    {
-        _jobFactory = jobFactory;
-    }
     [HttpGet("gettest")]
     public IActionResult Get()
     {
@@ -21,8 +16,7 @@ public class HangfireController : ControllerBase
     [HttpPost("job/{jobName}")]
     public ActionResult<string> RunJob(string jobName, [FromBody] JobRequest jobRequest)
     {
-        //TO DO: We must add a cache with redis. Cache should be use for blocker
-        var job = _jobFactory(jobName);
+        var job = jobFactory(jobName);
         
         var executedJobId = Hangfire.BackgroundJob.Enqueue(() => job.Run(jobRequest, DateTime.UtcNow));
         return Ok($"Job {jobName} has been queued with ID: {executedJobId}");

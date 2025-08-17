@@ -4,10 +4,7 @@ using LexHarvester.Infrastructure.Providers.Respose;
 
 namespace LexHarvester.Infrastructure.Providers.Concrete;
 
-public class LegislationDocumentProvider : ILegislationDocumentProvider
+public class LegislationDocumentProvider(HttpClient httpClient) : BaseHttpProvider<LegislationDocumentRequest, LegislationDocumentResponse>(httpClient), ILegislationDocumentProvider
 {
-    public Task<LegislationDocumentResponse> SendAsync(LegislationDocumentRequest request)
-    {
-        throw new NotImplementedException();
-    }
+    protected override HttpMethod HttpMethod => HttpMethod.Post;
 }
