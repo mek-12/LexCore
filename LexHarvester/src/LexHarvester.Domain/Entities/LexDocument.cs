@@ -18,6 +18,6 @@ public class LexDocument : IEntity<long>
     public DocumentType DocumentType { get; set; }
     public string? Title { get; set; } // Türkçe karakterlerden arındırılmış, formatlanmış
     public byte[]? Content { get; set; } // PDF veya HTML içeriği
-    public string? FileType { get; set; } // "pdf", "html"
+    public string? MimeType { get; set; } // "pdf", "html"
     public DateTime DownloadedAt { get; set; } = DateTime.UtcNow;
 }

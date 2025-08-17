@@ -17,8 +17,8 @@ public class CaseLawDocumentReferenceInitStep(IUnitOfWork unitOfWork,
     private readonly IRepository<CaseLawDocumentReference, long> _caseLawDocumentReference = unitOfWork.GetRepository<CaseLawDocumentReference, long>();
     public async Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        caseLawDocumentReferenceContext.CaseLawDivisions = await _caseLawDivisionRepository.GetAllAsync();
-        caseLawDocumentReferenceContext.CaseLawTypes = await _caseLawTypeRepository.GetAllAsync();
+        caseLawDocumentReferenceContext.CaseLawDivisions = await _caseLawDivisionRepository.GetAllAsync(c => c.ItemType == "ISTINAFHUKUK");
+        caseLawDocumentReferenceContext.CaseLawTypes = await _caseLawTypeRepository.GetAllAsync(c => c.Name == "ISTINAFHUKUK");
         caseLawDocumentReferenceContext.HarvestingStates.AddRange(await _harvestingStateRepository.GetAllAsync(h => h.DocumentType == DocumentType.CaseLaw, true));
         caseLawDocumentReferenceContext.CaseLawDocumentIds.AddRange(await _caseLawDocumentReference.SelectAsync(null, c => c.DocumentId, true));
     }

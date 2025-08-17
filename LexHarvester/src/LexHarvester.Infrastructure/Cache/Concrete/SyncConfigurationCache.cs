@@ -3,12 +3,13 @@ using LexHarvester.Domain.DTOs;
 using LexHarvester.Domain.Entities;
 using LexHarvester.Infrastructure.Cache.Abstract;
 using Microsoft.Extensions.DependencyInjection;
+using Navend.Core.Caching.Concrete;
 using Navend.Core.UOW;
 
 namespace LexHarvester.Infrastructure.Cache.Concrete;
 
 public class SyncConfigurationCache(IMapper mapper,
-                                    IServiceProvider serviceProvider) : BaseCacheService<SyncConfigurationDto>, ISyncConfigurationCache
+                                    IServiceProvider serviceProvider) : InMemoryCache<SyncConfigurationDto>, ISyncConfigurationCache
 {
     public string CacheName => nameof(SyncConfigurationCache);
 

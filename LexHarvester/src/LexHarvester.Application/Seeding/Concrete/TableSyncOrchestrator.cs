@@ -14,7 +14,7 @@ public class TableSyncOrchestrator(IEnumerable<ITableSync> seeders,
         {
             try
             {
-                var isActive = syncConfiguration.TryGet(seeder.Name, out SyncConfigurationDto? conf) ? conf?.IsActive ?? true : true;
+                var isActive = syncConfiguration.TryGet(seeder.Name, out SyncConfigurationDto? conf) ? conf?.IsActive ?? true : false;
                 if (!isActive) continue;
 
                 var seederType = seeder.GetType().Name;

@@ -1,3 +1,4 @@
+using LexHarvester.Infrastructure.Providers.Respose.BaseModels;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Newtonsoft.Json;
 
@@ -55,15 +56,4 @@ public class MevzuatTurDto
     public string Name { get; set; }
     public string Description { get; set; }
     public string MaddeSonuRegex { get; set; }
-}
-
-public class ResponseMetadata
-{
-    public string FMTY { get; set; }
-    public string FMC { get; set; }
-    public string FMTE { get; set; }
-    public string FMU { get; set; }
-    public string PTID { get; set; }
-    public string TID { get; set; }
-    public string SID { get; set; }
 }
