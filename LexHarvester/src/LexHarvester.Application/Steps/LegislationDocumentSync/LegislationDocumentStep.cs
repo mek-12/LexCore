@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+using Azure;
 using LexHarvester.Application.Extensions;
 using LexHarvester.Domain.Entities;
 using LexHarvester.Domain.Enums;
@@ -18,44 +20,51 @@ public class LegislationDocumentStep(IUnitOfWork unitOfWork, ILegislationDocumen
     private readonly IRepository<LexDocument, long> lexDocumentRepository = unitOfWork.GetRepository<LexDocument, long>();
     public async Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        await unitOfWork.StartTransactionAsync();
-
         try
         {
             while (await legislationDocumentReference.GetRemainingDownloadCount() > 0)
             {
                 await unitOfWork.StartTransactionAsync();
-                var documentReferances = await legislationDocumentReference.SelectAsync(p => !p.Downloaded,
+                var documentReferences = await legislationDocumentReference.SelectAsync(p => !p.Downloaded,
                                                                                           s => new { s.Id, s.Downloaded, s.LegislationId },
-                                                                                          false, 1000);
+                                                                                          false, 100);
+                ConcurrentDictionary<string, LegislationDocumentResponse> legislationDocumentResponses = new ConcurrentDictionary<string, LegislationDocumentResponse>();
                 // Process legislationDocuments in parallel with a max degree of parallelism of 20
-                await Parallel.ForEachAsync(documentReferances, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount, CancellationToken = cancellationToken }, async (doc, ct) =>
+                await Parallel.ForEachAsync(documentReferences, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount, CancellationToken = cancellationToken }, async (doc, ct) =>
                 {
                     // TODO: Replace this with your actual provider logic to get the response for each document
                     // Example:
                     var request = new LegislationDocumentRequest();
-                    request.Data.DocumentId = doc.LegislationId;
+                    request.Data.Id = doc.LegislationId;
                     LegislationDocumentResponse response = await documentProvider.SendAsync(request);
+                    _ = legislationDocumentResponses.TryAdd(doc.LegislationId, response);
+                    Console.WriteLine($"Processing document Id: {doc.Id}");
+                });
+
+                foreach (var item in legislationDocumentResponses)
+                {
+                    var legislationId = item.Key;
+                    var response = item.Value;
                     LexDocument lexDocument = new LexDocument
                     {
                         Content = response?.Data?.Content?.Base64ToBytes(),
                         DocumentType = DocumentType.Legislation,
                         DownloadedAt = DateTime.Now,
                         MimeType = response?.Data?.MimeType,
-                        ReferenceId = doc.LegislationId
+                        ReferenceId = legislationId
                     };
                     await lexDocumentRepository.AddAsync(lexDocument);
                     await legislationDocumentReference.UpdatePropertiesAsync(
                         new LegislationDocumentReference
                         {
-                            Id = doc.Id,
+                            Id = documentReferences.Where(d => d.LegislationId == legislationId).First().Id,
                             Downloaded = true
                         },
                         l => l.Downloaded
                     );
-                    Console.WriteLine($"Processing document Id: {doc.Id}");
-                });
+                }
                 await unitOfWork.CommitTransactionAsync();
+                legislationDocumentResponses.Clear();
             }
         }
         catch (System.Exception)
