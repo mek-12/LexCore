@@ -3,7 +3,4 @@ using LexHarvester.Infrastructure.Providers.Respose;
 
 namespace LexHarvester.Infrastructure.Providers.Abstract;
 
-public interface ILegislationDocumentProvider : IBaseCilent<LegislationDocumentRequest, LegislationDocumentResponse>
-{
-
-}
+public interface ILegislationDocumentProvider : IBaseCilent<LegislationDocumentRequest, LegislationDocumentResponse> { }
