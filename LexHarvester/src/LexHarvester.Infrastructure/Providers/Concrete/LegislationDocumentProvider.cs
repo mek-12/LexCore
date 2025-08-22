@@ -7,4 +7,5 @@ namespace LexHarvester.Infrastructure.Providers.Concrete;
 public class LegislationDocumentProvider(HttpClient httpClient) : BaseHttpProvider<LegislationDocumentRequest, LegislationDocumentResponse>(httpClient), ILegislationDocumentProvider
 {
     protected override HttpMethod HttpMethod => HttpMethod.Post;
+    protected override bool UseStream => true;
 }

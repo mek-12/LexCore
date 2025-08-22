@@ -17,6 +17,7 @@ public abstract class BaseHttpProvider<TRequest, TResponse> : IBaseCilent<TReque
     }
 
     protected abstract HttpMethod HttpMethod { get; }
+    protected virtual bool UseStream { get; } = false;
     protected virtual string ContentType { get; } = "application/json";
     public async Task<TResponse> SendAsync(TRequest requestModel)
     {
@@ -32,10 +33,17 @@ public abstract class BaseHttpProvider<TRequest, TResponse> : IBaseCilent<TReque
                 }), Encoding.UTF8, ContentType)
             };
 
-            var response = await _httpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request, UseStream ? HttpCompletionOption.ResponseHeadersRead : HttpCompletionOption.ResponseContentRead);
             response.EnsureSuccessStatusCode();
-
-            var content = await response.Content.ReadAsStringAsync();
+            string content;
+            if (!UseStream)
+                content = await response.Content.ReadAsStringAsync();
+            else
+            {
+                using var stream = await response.Content.ReadAsStreamAsync();
+                using var reader = new StreamReader(stream);
+                content = await reader.ReadToEndAsync();
+            }
             var result = JsonConvert.DeserializeObject<TResponse>(content);
 
             if (result == null)
