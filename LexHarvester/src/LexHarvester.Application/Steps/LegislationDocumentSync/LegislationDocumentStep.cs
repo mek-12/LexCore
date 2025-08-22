@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using Azure;
 using LexHarvester.Application.Extensions;
 using LexHarvester.Domain.Entities;
 using LexHarvester.Domain.Enums;
@@ -27,7 +26,7 @@ public class LegislationDocumentStep(IUnitOfWork unitOfWork, ILegislationDocumen
                 await unitOfWork.StartTransactionAsync();
                 var documentReferences = await legislationDocumentReference.SelectAsync(p => !p.Downloaded,
                                                                                           s => new { s.Id, s.Downloaded, s.LegislationId },
-                                                                                          false, 100);
+                                                                                          false, 1000);
                 ConcurrentDictionary<string, LegislationDocumentResponse> legislationDocumentResponses = new ConcurrentDictionary<string, LegislationDocumentResponse>();
                 // Process legislationDocuments in parallel with a max degree of parallelism of 20
                 await Parallel.ForEachAsync(documentReferences, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount, CancellationToken = cancellationToken }, async (doc, ct) =>

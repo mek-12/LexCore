@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Navend.Core.Constants;
 using Navend.Core.Extensions;
+using Polly;
+using Polly.Extensions.Http;
 
 namespace LexHarvester.Infrastructure.Extension;
 
@@ -16,7 +18,7 @@ public static class DIExtension
     {
         services.AddAutoMapper(typeof(AutoMapping)); // TO DO: NavendCore a al sonr. Profile dan türeyen tüm assemblyler i tara ve ekle.
         var cacheType = CacheTypes.InMemory | CacheTypes.Redis;
-        services.AddCaches(configuration, cacheType,  new[] {typeof(RequestEndpointCache).Assembly }); // TO DO: Move cache mechanism to Navend.Core. Even create a new library named as Navend.Cache
+        services.AddCaches(configuration, cacheType, new[] { typeof(RequestEndpointCache).Assembly }); // TO DO: Move cache mechanism to Navend.Core. Even create a new library named as Navend.Cache
         services.AddHttpClientServices();
         return services;
     }
@@ -28,11 +30,11 @@ public static class DIExtension
         services.AddConfiguredHttpClient<ICaseLawTypeProvider, CaseLawTypeProvider>("GetIctihatTypes");
         services.AddConfiguredHttpClient<ICaseLawDocumentReferenceProvider, CaseLawDocumentReferenceProvider>("GetIctihatDocumentReferences");
         services.AddConfiguredHttpClient<ILegislationDocumentReferenceProvider, LegislationDocumentReferenceProvider>("GetLegislationDocumentReferences");
-        services.AddConfiguredHttpClient<ICaseLawDivisionProvider, CaseLawDivisionProvider>("GetCaseLawDivision"); 
-        services.AddConfiguredHttpClient<ILegislationDocumentProvider, LegislationDocumentProvider>("GetLegislationDocuments"); 
+        services.AddConfiguredHttpClient<ICaseLawDivisionProvider, CaseLawDivisionProvider>("GetCaseLawDivision");
+        services.AddConfiguredHttpClient<ILegislationDocumentProvider, LegislationDocumentProvider>("GetLegislationDocuments");
         // services.AddConfiguredHttpClient<ICaseLawDocumentProvider, CaseLawDocumentProvider>("GetCaseLawDocuments"); 
         return services;
-        }
+    }
     private static IHttpClientBuilder AddConfiguredHttpClient<TInterface, TImplementation>(
         this IServiceCollection services,
         string endpointKey)
@@ -52,6 +54,17 @@ public static class DIExtension
 
                 client.BaseAddress = new Uri($"{endpointConfig.Url}{endpointConfig.Method}");
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
-            });
+            })
+            .AddPolicyHandler(GetRetryPolicy());
+    }
+    private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+    {
+        return HttpPolicyExtensions
+            .HandleTransientHttpError() // 5XX, 408, network failures
+            .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound) // optional
+            .WaitAndRetryAsync(
+                retryCount: 15,
+                sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(5, retryAttempt)) // exponential backoff
+            );
     }
 }
