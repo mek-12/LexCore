@@ -10,7 +10,7 @@ public class TableSyncOrchestrator(IEnumerable<ITableSync> seeders,
 {
     public async Task RunAsync(CancellationToken cancellationToken = default)
     {
-        foreach (var seeder in seeders)
+        foreach (var seeder in seeders.OrderBy(o => o.Order))
         {
             try
             {

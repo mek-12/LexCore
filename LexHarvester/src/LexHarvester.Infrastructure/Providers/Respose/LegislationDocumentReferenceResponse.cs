@@ -1,19 +1,18 @@
 using LexHarvester.Infrastructure.Providers.Respose.BaseModels;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Newtonsoft.Json;
 
-namespace LexHarvester.Infrastructure.Providers.Request;
+namespace LexHarvester.Infrastructure.Providers.Response;
 
 public class LegislationDocumentReferenceResponse
 {
-    public LegislationData Data { get; set; }
-    public ResponseMetadata Metadata { get; set; }
+    public LegislationData Data { get; set; } = new();
+    public ResponseMetadata Metadata { get; set; } = new();
 }
 
 public class LegislationData
 {
     [JsonProperty("MevzuatList")]
-    public List<LegislationDto> Legislations { get; set; }
+    public List<LegislationDto> Legislations { get; set; } = new();
     public int Total { get; set; }
     public int Start { get; set; }
 }

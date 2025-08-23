@@ -1,7 +1,7 @@
 using AutoMapper;
 using LexHarvester.Domain.DTOs;
 using LexHarvester.Domain.Entities;
-using LexHarvester.Infrastructure.Providers.Request;
+using LexHarvester.Infrastructure.Providers.Response;
 using LexHarvester.Infrastructure.Providers.Respose;
 
 namespace LexHarvester.Application.Mapper;
