@@ -1,4 +1,5 @@
 using LexHarvester.Infrastructure.Providers.Request;
+using LexHarvester.Infrastructure.Providers.Response;
 
 namespace LexHarvester.Infrastructure.Providers.Abstract;
 
