@@ -1,0 +1,16 @@
+Her bir proje ayrı olmalı.
+
+LexHarvester: (Done)
+    - Ham datayı bytearray olarak mssql de depolayan ve sunan uygulama.
+
+LexChunker: (Not started)
+    - Belge bazlı anlamlı parçalara(chunk) bölen ve depolayan uygulama.
+    - Database olarak PostgreSql kullanılacak.
+    - Full python ile geliştirilmesi bekleniyor.
+
+LexEmbedder: (Not started)
+    - Chunk edilmiş veriyi OpenAI veya DeepSeek gibi service providerları ile vektörel
+      dataya dönüştürüp saklayan ve arama yapan uygulama.
+    - Database olarak Qdrant kullanılması bekleniyor.
+    - Full python ile geliştirilmesi bekleniyor.
+
